@@ -12,7 +12,8 @@ These apply to every step. If a step would break one, stop and ask the human.
 2. No global installs (`npm -g`, `corepack enable`, `brew`, `apt`, version managers, and similar) without asking first.
 3. No secrets. Never ask for, read, print or write tokens, passwords or `.env` files. If git needs credentials you do not have, stop and tell the human.
 4. Ask the human before: overwriting or deleting any file that existed before you started; creating or changing anything under `.github/` or any CI setting or repository variable; running any `git push` or creating a remote repository.
-5. Touch only the target directory and the temporary directory you create. Nothing else.
+5. Touch only the target directory. Nothing else.
+6. If a safety tool or hook blocks a command, do not reword or split it to get around the block. Tell the human and ask.
 
 A file you copied into the target during this run is not a "file that existed before you started". Anything already in the target before step 4 is.
 
@@ -58,27 +59,39 @@ if [ ! -e "$TARGET" ] || [ -z "$(ls -A "$TARGET")" ]; then echo ok-empty; else e
 - `not-empty` and it already holds a previous run of this guide (`$TARGET/sgconfig.yml` exists and `node -p "require('$TARGET/package.json').name"` prints `$NAME` or `mimeograph`): skip step 4 and continue with step 5.
 - `not-empty` otherwise: stop and ask the human for another directory. Do not copy over it.
 
-## Step 4. Copy the template
+## Step 4. Create the repository and copy the template
 
 **Skip if** step 3 found a previous run.
 
 ```sh
-TMP="$(mktemp -d)"
-git clone --depth 1 https://github.com/seatrunk/mimeograph.git "$TMP/mimeograph"
 mkdir -p "$TARGET"
-git -C "$TMP/mimeograph" archive HEAD | tar -x -C "$TARGET"
-rm -r "$TMP"
+git -C "$TARGET" rev-parse --show-toplevel
 ```
 
-`git archive` copies the files without the `.git` history. Use the branch or tag the human names with `git clone --depth 1 --branch <ref> ...`; otherwise use the default branch.
+- It fails: `$TARGET` is not in a git repository. Run `git init -b main "$TARGET"`.
+- It prints `$(cd "$TARGET" && pwd -P)`: already a repository root, continue.
+- It prints any other directory: `$TARGET` is inside a different repository. Stop and ask the human.
 
-If `git clone` fails because the repository is private or you have no access, stop and tell the human. Do not ask for tokens (hard rule 3).
+Then fetch the template into it. Use the branch or tag the human names in place of `HEAD`; otherwise take the default branch.
+
+```sh
+git -C "$TARGET" fetch --depth 1 https://github.com/seatrunk/mimeograph.git HEAD
+git -C "$TARGET" checkout FETCH_HEAD -- .
+git -C "$TARGET" read-tree --empty
+```
+
+The last command leaves the index empty, so nothing is staged and nothing is committed; the files show up as untracked. There is no temporary directory and nothing to delete. Do not add a remote and do not commit; that is for the human.
+
+If `git fetch` fails because the repository is private or you have no access, stop and tell the human. Do not ask for tokens (hard rule 3).
 
 Check:
 
 ```sh
-test -f "$TARGET/sgconfig.yml" && test -d "$TARGET/rules/core" && test ! -e "$TARGET/.git" && echo ok
+test -f "$TARGET/sgconfig.yml" && test -d "$TARGET/rules/core" && test -z "$(git -C "$TARGET" diff --cached --name-only)" && echo ok
+git -C "$TARGET" rev-parse --show-toplevel
 ```
+
+The first prints `ok`; the second prints the resolved `$TARGET`.
 
 ## Step 5. Strip the template-only files
 
@@ -125,21 +138,7 @@ head -1 AGENTS.md
 
 The first prints `$NAME`; the second prints `# AGENTS.md`.
 
-## Step 7. Start a git repository
-
-```sh
-git -C "$TARGET" rev-parse --show-toplevel
-```
-
-- It fails: run `git -C "$TARGET" init -b main`.
-- It prints `$TARGET` (resolved path): already done, skip.
-- It prints another directory: `$TARGET` is inside a different repository. Stop and ask the human.
-
-Do not commit and do not add a remote. Leave that to the human.
-
-Check: `git -C "$TARGET" rev-parse --show-toplevel` prints `$TARGET`.
-
-## Step 8. Install dependencies
+## Step 7. Install dependencies
 
 ```sh
 cd "$TARGET"
@@ -150,7 +149,7 @@ This downloads packages from the npm registry and runs the install script of `@a
 
 Check: the command exits 0 and `test -d node_modules` succeeds.
 
-## Step 9. Run the gate
+## Step 8. Run the gate
 
 ```sh
 cd "$TARGET"
@@ -164,7 +163,7 @@ If it fails:
 - At the Prettier step only: run `pnpm format`, then `pnpm check` again.
 - Anything else: do not edit `rules/`, `tests/` or the tool configs to make it pass, and do not delete or weaken a test. Stop and show the human the failing step and its output.
 
-## Step 10. Report to the human
+## Step 9. Report to the human
 
 Send a short message with these lines filled in:
 
@@ -172,7 +171,7 @@ Send a short message with these lines filled in:
 Mimeograph installed in <TARGET>.
 - project name: <NAME>
 - pnpm check: green (exit 0)
-- git: initialized on main, nothing committed, nothing pushed, no remote
+- git: initialized on main, nothing staged, nothing committed, nothing pushed, no remote
 - CI: .github/workflows/ci.yml copied unchanged. It runs on ubuntu-latest unless the repository variable CI_RUNS_ON is set (https://github.com/seatrunk/mimeograph/blob/main/README.md#ci-runner)
 - license: LICENSE kept as copied (MIT, copyright 2026 seatrunk); decide if your project needs a different one
 - examples: src/features/example-a and example-b and docs/features/example-flow.md kept; delete them when you have your first real feature
@@ -186,7 +185,7 @@ Add any step you skipped and why. Then stop.
 What the agent will do:
 
 - ask you for the project name and directory, and which path you want;
-- download this repository with `git clone` and nothing else from the network except the npm packages in the lockfile;
+- download this repository with `git fetch` and nothing else from the network except the npm packages in the lockfile;
 - create files only inside the directory you chose, run `git init` there, run `pnpm install --frozen-lockfile` and `pnpm check`;
 - tell you exactly what it did and what is left for you.
 

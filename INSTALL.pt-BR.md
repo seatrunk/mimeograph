@@ -12,7 +12,8 @@ Valem para todo passo. Se um passo quebrar uma delas, pare e pergunte à pessoa.
 2. Nada de instalação global (`npm -g`, `corepack enable`, `brew`, `apt`, gerenciadores de versão e similares) sem perguntar antes.
 3. Nada de segredo. Nunca peça, leia, imprima ou grave tokens, senhas ou arquivos `.env`. Se o git precisar de credencial que você não tem, pare e avise a pessoa.
 4. Pergunte à pessoa antes de: sobrescrever ou apagar qualquer arquivo que já existia antes de você começar; criar ou mudar qualquer coisa em `.github/`, em configuração de CI ou em variável de repositório; rodar qualquer `git push` ou criar repositório remoto.
-5. Mexa só no diretório de destino e no diretório temporário que você criar. Em mais nada.
+5. Mexa só no diretório de destino. Em mais nada.
+6. Se uma ferramenta de segurança ou um hook bloquear um comando, não reescreva nem divida o comando para contornar o bloqueio. Avise a pessoa e pergunte.
 
 Um arquivo que você copiou para o destino nesta execução não é um "arquivo que já existia antes de você começar". Tudo o que já estava no destino antes do passo 4 é.
 
@@ -58,27 +59,39 @@ if [ ! -e "$TARGET" ] || [ -z "$(ls -A "$TARGET")" ]; then echo ok-empty; else e
 - `not-empty` e já contém uma execução anterior deste guia (`$TARGET/sgconfig.yml` existe e `node -p "require('$TARGET/package.json').name"` imprime `$NAME` ou `mimeograph`): pule o passo 4 e continue no passo 5.
 - `not-empty` em qualquer outro caso: pare e peça outro diretório à pessoa. Não copie por cima.
 
-## Passo 4. Copie o molde
+## Passo 4. Crie o repositório e copie o molde
 
 **Pule se** o passo 3 encontrou uma execução anterior.
 
 ```sh
-TMP="$(mktemp -d)"
-git clone --depth 1 https://github.com/seatrunk/mimeograph.git "$TMP/mimeograph"
 mkdir -p "$TARGET"
-git -C "$TMP/mimeograph" archive HEAD | tar -x -C "$TARGET"
-rm -r "$TMP"
+git -C "$TARGET" rev-parse --show-toplevel
 ```
 
-`git archive` copia os arquivos sem o histórico do `.git`. Use a branch ou tag que a pessoa indicar com `git clone --depth 1 --branch <ref> ...`; senão, a branch padrão.
+- Falha: `$TARGET` não está em um repositório git. Rode `git init -b main "$TARGET"`.
+- Imprime `$(cd "$TARGET" && pwd -P)`: já é a raiz de um repositório, continue.
+- Imprime qualquer outro diretório: `$TARGET` está dentro de outro repositório. Pare e pergunte à pessoa.
 
-Se o `git clone` falhar porque o repositório é privado ou você não tem acesso, pare e avise a pessoa. Não peça tokens (regra dura 3).
+Depois traga o molde para dentro dele. Use no lugar de `HEAD` a branch ou tag que a pessoa indicar; senão, a branch padrão.
+
+```sh
+git -C "$TARGET" fetch --depth 1 https://github.com/seatrunk/mimeograph.git HEAD
+git -C "$TARGET" checkout FETCH_HEAD -- .
+git -C "$TARGET" read-tree --empty
+```
+
+O último comando deixa o índice vazio: nada fica em stage e nada é commitado; os arquivos aparecem como não rastreados. Não há diretório temporário e nada para apagar. Não adicione remote e não faça commit; isso fica com a pessoa.
+
+Se o `git fetch` falhar porque o repositório é privado ou você não tem acesso, pare e avise a pessoa. Não peça tokens (regra dura 3).
 
 Verificação:
 
 ```sh
-test -f "$TARGET/sgconfig.yml" && test -d "$TARGET/rules/core" && test ! -e "$TARGET/.git" && echo ok
+test -f "$TARGET/sgconfig.yml" && test -d "$TARGET/rules/core" && test -z "$(git -C "$TARGET" diff --cached --name-only)" && echo ok
+git -C "$TARGET" rev-parse --show-toplevel
 ```
+
+O primeiro imprime `ok`; o segundo imprime o `$TARGET` resolvido.
 
 ## Passo 5. Tire os arquivos que são só do molde
 
@@ -125,21 +138,7 @@ head -1 AGENTS.md
 
 O primeiro imprime `$NAME`; o segundo imprime `# AGENTS.md`.
 
-## Passo 7. Inicie um repositório git
-
-```sh
-git -C "$TARGET" rev-parse --show-toplevel
-```
-
-- Falha: rode `git -C "$TARGET" init -b main`.
-- Imprime `$TARGET` (caminho resolvido): já feito, pule.
-- Imprime outro diretório: `$TARGET` está dentro de outro repositório. Pare e pergunte à pessoa.
-
-Não faça commit e não adicione remote. Isso fica com a pessoa.
-
-Verificação: `git -C "$TARGET" rev-parse --show-toplevel` imprime `$TARGET`.
-
-## Passo 8. Instale as dependências
+## Passo 7. Instale as dependências
 
 ```sh
 cd "$TARGET"
@@ -150,7 +149,7 @@ Isso baixa pacotes do registro npm e roda o script de instalação do `@ast-grep
 
 Verificação: o comando sai com 0 e `test -d node_modules` passa.
 
-## Passo 9. Rode o portão
+## Passo 8. Rode o portão
 
 ```sh
 cd "$TARGET"
@@ -164,7 +163,7 @@ Se falhar:
 - Só na etapa do Prettier: rode `pnpm format` e depois `pnpm check` de novo.
 - Qualquer outra: não edite `rules/`, `tests/` nem as configurações das ferramentas para passar, e não apague nem enfraqueça teste. Pare e mostre à pessoa a etapa que falhou e a saída.
 
-## Passo 10. Relate à pessoa
+## Passo 9. Relate à pessoa
 
 Envie uma mensagem curta com estas linhas preenchidas:
 
@@ -172,7 +171,7 @@ Envie uma mensagem curta com estas linhas preenchidas:
 Mimeograph instalado em <TARGET>.
 - nome do projeto: <NAME>
 - pnpm check: verde (saída 0)
-- git: iniciado na main, nada commitado, nada enviado, sem remote
+- git: iniciado na main, nada em stage, nada commitado, nada enviado, sem remote
 - CI: .github/workflows/ci.yml copiado sem mudança. Roda em ubuntu-latest, a menos que a variável de repositório CI_RUNS_ON esteja definida (https://github.com/seatrunk/mimeograph/blob/main/README.pt-BR.md#runner-do-ci)
 - licença: LICENSE mantida como copiada (MIT, copyright 2026 seatrunk); decida se o seu projeto precisa de outra
 - exemplos: src/features/example-a e example-b e docs/features/example-flow.md mantidos; apague quando tiver a primeira feature real
@@ -186,7 +185,7 @@ Acrescente qualquer passo que você pulou e o motivo. Depois pare.
 O que o agente vai fazer:
 
 - perguntar o nome do projeto, o diretório e qual caminho você quer;
-- baixar este repositório com `git clone` e nada mais da rede além dos pacotes npm do lockfile;
+- baixar este repositório com `git fetch` e nada mais da rede além dos pacotes npm do lockfile;
 - criar arquivos só dentro do diretório que você escolheu, rodar `git init` ali, rodar `pnpm install --frozen-lockfile` e `pnpm check`;
 - dizer exatamente o que fez e o que sobrou para você.
 
