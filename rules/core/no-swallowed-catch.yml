@@ -1,0 +1,57 @@
+id: no-swallowed-catch
+language: Tsx
+severity: error
+message: 'catch só pode propagar o erro, e o último statement do bloco precisa fazer isso: relance (`throw e` ou `throw new Error("contexto", { cause: e })`) ou retorne um resultado que contenha o erro (`return { ok: false, error: e }`). Um if/else em que os dois ramos propagam também vale. Fallbacks condicionais ficam antes dele. Registrar, converter em string, lançar só dentro de if sem else, switch ou laço, dentro de função aninhada ou de outro catch não propaga.'
+files:
+  - src/**
+utils:
+  err-mention:
+    any:
+      - kind: identifier
+        pattern: $ERR
+      - kind: shorthand_property_identifier
+        pattern: $ERR
+  terminal-leaf:
+    any:
+      - kind: throw_statement
+      - kind: return_statement
+    has:
+      matches: err-mention
+      stopBy: end
+  terminal-branch:
+    any:
+      - matches: terminal-leaf
+      - kind: statement_block
+        has:
+          nthChild:
+            position: 1
+            reverse: true
+          matches: terminal-leaf
+  terminal-if:
+    kind: if_statement
+    all:
+      - has:
+          field: consequence
+          matches: terminal-branch
+      - has:
+          field: alternative
+          kind: else_clause
+          has:
+            matches: terminal-branch
+rule:
+  kind: catch_clause
+  not:
+    all:
+      - has:
+          field: parameter
+          kind: identifier
+          pattern: $ERR
+      - has:
+          field: body
+          has:
+            nthChild:
+              position: 1
+              reverse: true
+            any:
+              - matches: terminal-leaf
+              - matches: terminal-if

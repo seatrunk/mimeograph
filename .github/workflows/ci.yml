@@ -1,0 +1,33 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: [self-hosted, Linux, X64, chubas]
+    timeout-minutes: 10
+    env:
+      PNPM_CONFIG_STORE_DIR: ${{ github.workspace }}/../.ci-state/pnpm-store
+      XDG_CACHE_HOME: ${{ github.workspace }}/../.ci-state/cache
+      XDG_STATE_HOME: ${{ github.workspace }}/../.ci-state/state
+      XDG_DATA_HOME: ${{ github.workspace }}/../.ci-state/data
+      XDG_CONFIG_HOME: ${{ github.workspace }}/../.ci-state/config
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          dest: ${{ runner.temp }}/setup-pnpm
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - if: always()
+        run: pnpm store prune

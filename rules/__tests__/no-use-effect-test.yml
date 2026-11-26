@@ -1,0 +1,21 @@
+id: no-use-effect
+valid:
+  - "const v = useMemo(() => 1, []);"
+  - "const f = useEffectLike();"
+  - "const e = useEffectEvent(() => 1);"
+  - "const s = 'usar efeito';"
+invalid:
+  - "useEffect(() => {}, []);"
+  - "React.useEffect(() => {}, []);"
+  - 'import { useEffect } from "react";'
+  - 'import { useEffect as fx } from "react";'
+  - 'export { useEffect } from "react";'
+  - "const fx = useEffect;"
+  - "const { useEffect: fx } = React;"
+  - "const { useEffect } = React;"
+  - 'React["useEffect"](() => {});'
+  - "React[`useEffect`](() => {});"
+  - 'Reflect.get(React, "useEffect");'
+  - "React.useLayoutEffect(() => {});"
+  - "useInsertionEffect(() => {});"
+  - "const { useLayoutEffect: fx } = React;"

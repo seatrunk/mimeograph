@@ -1,0 +1,134 @@
+id: feature-public-api-only
+snapshots:
+  const m = await import("#features/example-a/doubler.ts");:
+    labels:
+      - source: '"#features/example-a/doubler.ts"'
+        style: primary
+        start: 23
+        end: 55
+  "const m = await import('#features/example-a/doubler.ts', {});":
+    labels:
+      - source: "'#features/example-a/doubler.ts'"
+        style: primary
+        start: 23
+        end: 55
+  "const m = await import('#shared/../features/example-a/doubler.ts', {});":
+    labels:
+      - source: "'#shared/../features/example-a/doubler.ts'"
+        style: primary
+        start: 23
+        end: 65
+  "const m = await import('./features/example-a/doubler.ts', {});":
+    labels:
+      - source: "'./features/example-a/doubler.ts'"
+        style: primary
+        start: 23
+        end: 56
+  const m = await import(`#features/example-a/doubler.ts`);:
+    labels:
+      - source: "`#features/example-a/doubler.ts`"
+        style: primary
+        start: 23
+        end: 55
+  const m = require("#features/example-a/doubler.ts");:
+    labels:
+      - source: '"#features/example-a/doubler.ts"'
+        style: primary
+        start: 18
+        end: 50
+  export * as ns from "#features/example-a/doubler.ts";:
+    labels:
+      - source: '"#features/example-a/doubler.ts"'
+        style: primary
+        start: 20
+        end: 52
+  export * from "#features/example-a/doubler.ts";:
+    labels:
+      - source: '"#features/example-a/doubler.ts"'
+        style: primary
+        start: 14
+        end: 46
+  'export { a } from "#features/example-a/doubler.ts";':
+    labels:
+      - source: '"#features/example-a/doubler.ts"'
+        style: primary
+        start: 18
+        end: 50
+  import "#features/example-a/doubler.ts";:
+    labels:
+      - source: '"#features/example-a/doubler.ts"'
+        style: primary
+        start: 7
+        end: 39
+  import '#shared/../features/example-a/doubler.ts';:
+    labels:
+      - source: "'#shared/../features/example-a/doubler.ts'"
+        style: primary
+        start: 7
+        end: 49
+  'import type { A } from "#features/example-a/doubler.ts";':
+    labels:
+      - source: '"#features/example-a/doubler.ts"'
+        style: primary
+        start: 23
+        end: 55
+  import x = require('#features/example-a/doubler.ts');:
+    labels:
+      - source: "'#features/example-a/doubler.ts'"
+        style: primary
+        start: 19
+        end: 51
+  'import { a } from "#features/example-a/doubler.ts";':
+    labels:
+      - source: '"#features/example-a/doubler.ts"'
+        style: primary
+        start: 18
+        end: 50
+  'import { a } from "../../features/example-a/doubler.ts";':
+    labels:
+      - source: '"../../features/example-a/doubler.ts"'
+        style: primary
+        start: 18
+        end: 55
+  'import { a } from "../features/example-a/index.ts";':
+    labels:
+      - source: '"../features/example-a/index.ts"'
+        style: primary
+        start: 18
+        end: 50
+  'import { a } from "./features/example-a/index.ts";':
+    labels:
+      - source: '"./features/example-a/index.ts"'
+        style: primary
+        start: 18
+        end: 49
+  "import { a } from '#features/../features/example-a/doubler.ts';":
+    labels:
+      - source: "'#features/../features/example-a/doubler.ts'"
+        style: primary
+        start: 18
+        end: 62
+  "import { a } from '#features//example-a/doubler.ts';":
+    labels:
+      - source: "'#features//example-a/doubler.ts'"
+        style: primary
+        start: 18
+        end: 51
+  "import { a } from './features//example-a/doubler.ts';":
+    labels:
+      - source: "'./features//example-a/doubler.ts'"
+        style: primary
+        start: 18
+        end: 52
+  "import { a } from './x//features/example-a/doubler.ts';":
+    labels:
+      - source: "'./x//features/example-a/doubler.ts'"
+        style: primary
+        start: 18
+        end: 54
+  type T = typeof import("#features/example-a/doubler.ts");:
+    labels:
+      - source: '"#features/example-a/doubler.ts"'
+        style: primary
+        start: 23
+        end: 55

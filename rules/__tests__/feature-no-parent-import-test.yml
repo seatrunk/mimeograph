@@ -1,0 +1,29 @@
+id: feature-no-parent-import
+valid:
+  - 'import { a } from "./a.ts";'
+  - 'import { a } from "./sub/a.ts";'
+  - 'import { a } from "./a..b.ts";'
+  - 'import { a } from "#features/example-a";'
+  - 'import { t } from "#shared/text.ts";'
+  - 'import { a } from "some-pkg/features/a/b";'
+invalid:
+  - 'import { a } from "../example-a/doubler.ts";'
+  - 'import { a } from "./../example-a/doubler.ts";'
+  - 'import { a } from "./sub/../../example-a/doubler.ts";'
+  - 'import { a } from "./a/..";'
+  - 'import { a } from "..";'
+  - 'import type { A } from "../example-a/doubler.ts";'
+  - 'import "../example-a/doubler.ts";'
+  - 'export * from "../example-a/index.ts";'
+  - 'export * as ns from "../example-a/index.ts";'
+  - 'export { a } from "./../example-a/index.ts";'
+  - 'const m = await import("../example-a/index.ts");'
+  - 'const m = await import("./../example-a/index.ts");'
+  - "const m = await import(`../example-a/index.ts`);"
+  - "const m = await import(`./../example-a/index.ts`);"
+  - 'const m = require("./sub/../../example-a/index.ts");'
+  - 'type T = typeof import("../example-a/index.ts");'
+  - "const m = await import('../example-a/doubler.ts', {});"
+  - "const m = await import('./../example-a/doubler.ts', { with: { type: 'json' } });"
+  - "import x = require('../example-a/doubler.ts');"
+  - "const m = require('../example-a/doubler.ts', extra);"

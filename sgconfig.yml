@@ -1,0 +1,16 @@
+ruleDirs:
+  - rules/core
+  - rules/segundo-erro
+utilDirs:
+  - rules/utils
+testConfigs:
+  - testDir: rules/__tests__
+languageGlobs:
+  tsx:
+    - "*.ts"
+    - "*.mts"
+    - "*.cts"
+    - "*.js"
+    - "*.mjs"
+    - "*.cjs"
+    - "*.jsx"

@@ -1,0 +1,34 @@
+{
+  "name": "template-dune",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.23.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "imports": {
+    "#features/*": "./src/features/*/index.ts",
+    "#shared/*": "./src/shared/*"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "oxlint",
+    "ast": "ast-grep scan",
+    "ast:test": "ast-grep test",
+    "typecheck": "tsc --noEmit",
+    "knip": "knip",
+    "test": "vitest run",
+    "check": "pnpm format:check && pnpm lint && pnpm ast && pnpm ast:test && pnpm typecheck && pnpm knip && pnpm test"
+  },
+  "devDependencies": {
+    "@ast-grep/cli": "^0.51.3",
+    "@types/node": "^26.6.10",
+    "knip": "^6.48.0",
+    "oxlint": "^1.95.0",
+    "prettier": "^3.10.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.2"
+  }
+}

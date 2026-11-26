@@ -1,0 +1,1254 @@
+id: catch-propagacao-direta
+snapshots:
+  "try { run(); } catch (e) { if (flag) { return `${e}`; } return { ok: false, error: e }; }":
+    labels:
+      - source: "catch (e) { if (flag) { return `${e}`; } return { ok: false, error: e }; }"
+        style: primary
+        start: 15
+        end: 89
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 49
+        end: 50
+      - source: return `${e}`;
+        style: secondary
+        start: 39
+        end: 53
+      - source: return `${e}`;
+        style: secondary
+        start: 39
+        end: 53
+  "try { run(); } catch (e) { if (flag) { return console.error(e); } throw e; }":
+    labels:
+      - source: catch (e) { if (flag) { return console.error(e); } throw e; }
+        style: primary
+        start: 15
+        end: 76
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 60
+        end: 61
+      - source: return console.error(e);
+        style: secondary
+        start: 39
+        end: 63
+      - source: return console.error(e);
+        style: secondary
+        start: 39
+        end: 63
+  "try { run(); } catch (e) { return () => e; }":
+    labels:
+      - source: catch (e) { return () => e; }
+        style: primary
+        start: 15
+        end: 44
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 40
+        end: 41
+      - source: return () => e;
+        style: secondary
+        start: 27
+        end: 42
+      - source: return () => e;
+        style: secondary
+        start: 27
+        end: 42
+  "try { run(); } catch (e) { return (console.error(e), e); }":
+    labels:
+      - source: catch (e) { return (console.error(e), e); }
+        style: primary
+        start: 15
+        end: 58
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 49
+        end: 50
+      - source: return (console.error(e), e);
+        style: secondary
+        start: 27
+        end: 56
+      - source: return (console.error(e), e);
+        style: secondary
+        start: 27
+        end: 56
+  "try { run(); } catch (e) { return Object({ cause: e }); }":
+    labels:
+      - source: "catch (e) { return Object({ cause: e }); }"
+        style: primary
+        start: 15
+        end: 57
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 50
+        end: 51
+      - source: "return Object({ cause: e });"
+        style: secondary
+        start: 27
+        end: 55
+      - source: "return Object({ cause: e });"
+        style: secondary
+        start: 27
+        end: 55
+  "try { run(); } catch (e) { return String(e); }":
+    labels:
+      - source: catch (e) { return String(e); }
+        style: primary
+        start: 15
+        end: 46
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 41
+        end: 42
+      - source: return String(e);
+        style: secondary
+        start: 27
+        end: 44
+      - source: return String(e);
+        style: secondary
+        start: 27
+        end: 44
+  "try { run(); } catch (e) { return [e, null] as const; }":
+    labels:
+      - source: catch (e) { return [e, null] as const; }
+        style: primary
+        start: 15
+        end: 55
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 35
+        end: 36
+      - source: return [e, null] as const;
+        style: secondary
+        start: 27
+        end: 53
+      - source: return [e, null] as const;
+        style: secondary
+        start: 27
+        end: 53
+  "try { run(); } catch (e) { return [e]; }":
+    labels:
+      - source: catch (e) { return [e]; }
+        style: primary
+        start: 15
+        end: 40
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 35
+        end: 36
+      - source: return [e];
+        style: secondary
+        start: 27
+        end: 38
+      - source: return [e];
+        style: secondary
+        start: 27
+        end: 38
+  "try { run(); } catch (e) { return await wrap(e); }":
+    labels:
+      - source: catch (e) { return await wrap(e); }
+        style: primary
+        start: 15
+        end: 50
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 45
+        end: 46
+      - source: return await wrap(e);
+        style: secondary
+        start: 27
+        end: 48
+      - source: return await wrap(e);
+        style: secondary
+        start: 27
+        end: 48
+  "try { run(); } catch (e) { return console.error(e) as e; }":
+    labels:
+      - source: catch (e) { return console.error(e) as e; }
+        style: primary
+        start: 15
+        end: 58
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 48
+        end: 49
+      - source: return console.error(e) as e;
+        style: secondary
+        start: 27
+        end: 56
+      - source: return console.error(e) as e;
+        style: secondary
+        start: 27
+        end: 56
+  "try { run(); } catch (e) { return console.error(e); }":
+    labels:
+      - source: catch (e) { return console.error(e); }
+        style: primary
+        start: 15
+        end: 53
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 48
+        end: 49
+      - source: return console.error(e);
+        style: secondary
+        start: 27
+        end: 51
+      - source: return console.error(e);
+        style: secondary
+        start: 27
+        end: 51
+  "try { run(); } catch (e) { return e ?? null; }":
+    labels:
+      - source: catch (e) { return e ?? null; }
+        style: primary
+        start: 15
+        end: 46
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 34
+        end: 35
+      - source: return e ?? null;
+        style: secondary
+        start: 27
+        end: 44
+      - source: return e ?? null;
+        style: secondary
+        start: 27
+        end: 44
+  "try { run(); } catch (e) { return e satisfies unknown; }":
+    labels:
+      - source: return e satisfies unknown;
+        style: primary
+        start: 27
+        end: 54
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: catch (e) { return e satisfies unknown; }
+        style: secondary
+        start: 15
+        end: 56
+      - source: e
+        style: secondary
+        start: 34
+        end: 35
+  "try { run(); } catch (e) { return e!; }":
+    labels:
+      - source: catch (e) { return e!; }
+        style: primary
+        start: 15
+        end: 39
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 34
+        end: 35
+      - source: return e!;
+        style: secondary
+        start: 27
+        end: 37
+      - source: return e!;
+        style: secondary
+        start: 27
+        end: 37
+  "try { run(); } catch (e) { return flag ? e : null; }":
+    labels:
+      - source: "catch (e) { return flag ? e : null; }"
+        style: primary
+        start: 15
+        end: 52
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 41
+        end: 42
+      - source: "return flag ? e : null;"
+        style: secondary
+        start: 27
+        end: 50
+      - source: "return flag ? e : null;"
+        style: secondary
+        start: 27
+        end: 50
+  "try { run(); } catch (e) { return new Map({ cause: e }); }":
+    labels:
+      - source: "catch (e) { return new Map({ cause: e }); }"
+        style: primary
+        start: 15
+        end: 58
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 51
+        end: 52
+      - source: "return new Map({ cause: e });"
+        style: secondary
+        start: 27
+        end: 56
+      - source: "return new Map({ cause: e });"
+        style: secondary
+        start: 27
+        end: 56
+  "try { run(); } catch (e) { return new Object({ cause: e }); }":
+    labels:
+      - source: "catch (e) { return new Object({ cause: e }); }"
+        style: primary
+        start: 15
+        end: 61
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 54
+        end: 55
+      - source: "return new Object({ cause: e });"
+        style: secondary
+        start: 27
+        end: 59
+      - source: "return new Object({ cause: e });"
+        style: secondary
+        start: 27
+        end: 59
+  "try { run(); } catch (e) { return new String({ cause: e }); }":
+    labels:
+      - source: "catch (e) { return new String({ cause: e }); }"
+        style: primary
+        start: 15
+        end: 61
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 54
+        end: 55
+      - source: "return new String({ cause: e });"
+        style: secondary
+        start: 27
+        end: 59
+      - source: "return new String({ cause: e });"
+        style: secondary
+        start: 27
+        end: 59
+  "try { run(); } catch (e) { return wrap(e) as unknown; }":
+    labels:
+      - source: catch (e) { return wrap(e) as unknown; }
+        style: primary
+        start: 15
+        end: 55
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 39
+        end: 40
+      - source: return wrap(e) as unknown;
+        style: secondary
+        start: 27
+        end: 53
+      - source: return wrap(e) as unknown;
+        style: secondary
+        start: 27
+        end: 53
+  "try { run(); } catch (e) { return wrap(e); }":
+    labels:
+      - source: catch (e) { return wrap(e); }
+        style: primary
+        start: 15
+        end: 44
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 39
+        end: 40
+      - source: return wrap(e);
+        style: secondary
+        start: 27
+        end: 42
+      - source: return wrap(e);
+        style: secondary
+        start: 27
+        end: 42
+  "try { run(); } catch (e) { return wrap({ cause: e }); }":
+    labels:
+      - source: "catch (e) { return wrap({ cause: e }); }"
+        style: primary
+        start: 15
+        end: 55
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 48
+        end: 49
+      - source: "return wrap({ cause: e });"
+        style: secondary
+        start: 27
+        end: 53
+      - source: "return wrap({ cause: e });"
+        style: secondary
+        start: 27
+        end: 53
+  "try { run(); } catch (e) { return { ...e }; }":
+    labels:
+      - source: catch (e) { return { ...e }; }
+        style: primary
+        start: 15
+        end: 45
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 39
+        end: 40
+      - source: return { ...e };
+        style: secondary
+        start: 27
+        end: 43
+      - source: return { ...e };
+        style: secondary
+        start: 27
+        end: 43
+  "try { run(); } catch (e) { return { ...other, error: e }; }":
+    labels:
+      - source: "catch (e) { return { ...other, error: e }; }"
+        style: primary
+        start: 15
+        end: 59
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 53
+        end: 54
+      - source: "return { ...other, error: e };"
+        style: secondary
+        start: 27
+        end: 57
+      - source: "return { ...other, error: e };"
+        style: secondary
+        start: 27
+        end: 57
+  "try { run(); } catch (e) { return { cause: wrap(e) }; }":
+    labels:
+      - source: "catch (e) { return { cause: wrap(e) }; }"
+        style: primary
+        start: 15
+        end: 55
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 48
+        end: 49
+      - source: "return { cause: wrap(e) };"
+        style: secondary
+        start: 27
+        end: 53
+      - source: "return { cause: wrap(e) };"
+        style: secondary
+        start: 27
+        end: 53
+  "try { run(); } catch (e) { return { error: e, ...other }; }":
+    labels:
+      - source: "catch (e) { return { error: e, ...other }; }"
+        style: primary
+        start: 15
+        end: 59
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 43
+        end: 44
+      - source: "return { error: e, ...other };"
+        style: secondary
+        start: 27
+        end: 57
+      - source: "return { error: e, ...other };"
+        style: secondary
+        start: 27
+        end: 57
+  "try { run(); } catch (e) { return { error: e, ['err' + 'or']: undefined }; }":
+    labels:
+      - source: "catch (e) { return { error: e, ['err' + 'or']: undefined }; }"
+        style: primary
+        start: 15
+        end: 76
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 43
+        end: 44
+      - source: "return { error: e, ['err' + 'or']: undefined };"
+        style: secondary
+        start: 27
+        end: 74
+      - source: "return { error: e, ['err' + 'or']: undefined };"
+        style: secondary
+        start: 27
+        end: 74
+  "try { run(); } catch (e) { return { ok: false, [e]: 1 }; }":
+    labels:
+      - source: "catch (e) { return { ok: false, [e]: 1 }; }"
+        style: primary
+        start: 15
+        end: 58
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 48
+        end: 49
+      - source: "return { ok: false, [e]: 1 };"
+        style: secondary
+        start: 27
+        end: 56
+      - source: "return { ok: false, [e]: 1 };"
+        style: secondary
+        start: 27
+        end: 56
+  "try { run(); } catch (e) { return { ok: false, error: `${e}` }; }":
+    labels:
+      - source: "catch (e) { return { ok: false, error: `${e}` }; }"
+        style: primary
+        start: 15
+        end: 65
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 57
+        end: 58
+      - source: "return { ok: false, error: `${e}` };"
+        style: secondary
+        start: 27
+        end: 63
+      - source: "return { ok: false, error: `${e}` };"
+        style: secondary
+        start: 27
+        end: 63
+  "try { run(); } catch (e) { return { ok: false, error: console.error(e) } as unknown as Result; }":
+    labels:
+      - source: "catch (e) { return { ok: false, error: console.error(e) } as unknown as Result; }"
+        style: primary
+        start: 15
+        end: 96
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 68
+        end: 69
+      - source: "return { ok: false, error: console.error(e) } as unknown as Result;"
+        style: secondary
+        start: 27
+        end: 94
+      - source: "return { ok: false, error: console.error(e) } as unknown as Result;"
+        style: secondary
+        start: 27
+        end: 94
+  "try { run(); } catch (e) { return { ok: false, error: console.error(e) }; }":
+    labels:
+      - source: "catch (e) { return { ok: false, error: console.error(e) }; }"
+        style: primary
+        start: 15
+        end: 75
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 68
+        end: 69
+      - source: "return { ok: false, error: console.error(e) };"
+        style: secondary
+        start: 27
+        end: 73
+      - source: "return { ok: false, error: console.error(e) };"
+        style: secondary
+        start: 27
+        end: 73
+  "try { run(); } catch (e) { return { ok: false, error: e.message } as unknown as Result; }":
+    labels:
+      - source: "catch (e) { return { ok: false, error: e.message } as unknown as Result; }"
+        style: primary
+        start: 15
+        end: 89
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 54
+        end: 55
+      - source: "return { ok: false, error: e.message } as unknown as Result;"
+        style: secondary
+        start: 27
+        end: 87
+      - source: "return { ok: false, error: e.message } as unknown as Result;"
+        style: secondary
+        start: 27
+        end: 87
+  "try { run(); } catch (e) { return { ok: false, error: e.message }; }":
+    labels:
+      - source: "catch (e) { return { ok: false, error: e.message }; }"
+        style: primary
+        start: 15
+        end: 68
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 54
+        end: 55
+      - source: "return { ok: false, error: e.message };"
+        style: secondary
+        start: 27
+        end: 66
+      - source: "return { ok: false, error: e.message };"
+        style: secondary
+        start: 27
+        end: 66
+  "try { run(); } catch (e) { throw Error('x', { cause: e }); }":
+    labels:
+      - source: "catch (e) { throw Error('x', { cause: e }); }"
+        style: primary
+        start: 15
+        end: 60
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 53
+        end: 54
+      - source: "throw Error('x', { cause: e });"
+        style: secondary
+        start: 27
+        end: 58
+      - source: "throw Error('x', { cause: e });"
+        style: secondary
+        start: 27
+        end: 58
+  "try { run(); } catch (e) { throw console.error(e); }":
+    labels:
+      - source: catch (e) { throw console.error(e); }
+        style: primary
+        start: 15
+        end: 52
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 47
+        end: 48
+      - source: throw console.error(e);
+        style: secondary
+        start: 27
+        end: 50
+      - source: throw console.error(e);
+        style: secondary
+        start: 27
+        end: 50
+  "try { run(); } catch (e) { throw new AggregateError([], ...args, { cause: e }); }":
+    labels:
+      - source: "catch (e) { throw new AggregateError([], ...args, { cause: e }); }"
+        style: primary
+        start: 15
+        end: 81
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 74
+        end: 75
+      - source: "throw new AggregateError([], ...args, { cause: e });"
+        style: secondary
+        start: 27
+        end: 79
+      - source: "throw new AggregateError([], ...args, { cause: e });"
+        style: secondary
+        start: 27
+        end: 79
+  "try { run(); } catch (e) { throw new AggregateError([], { cause: e }); }":
+    labels:
+      - source: "catch (e) { throw new AggregateError([], { cause: e }); }"
+        style: primary
+        start: 15
+        end: 72
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 65
+        end: 66
+      - source: "throw new AggregateError([], { cause: e });"
+        style: secondary
+        start: 27
+        end: 70
+      - source: "throw new AggregateError([], { cause: e });"
+        style: secondary
+        start: 27
+        end: 70
+  "try { run(); } catch (e) { throw new AppError('x', { cause: e }); }":
+    labels:
+      - source: "catch (e) { throw new AppError('x', { cause: e }); }"
+        style: primary
+        start: 15
+        end: 67
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 60
+        end: 61
+      - source: "throw new AppError('x', { cause: e });"
+        style: secondary
+        start: 27
+        end: 65
+      - source: "throw new AppError('x', { cause: e });"
+        style: secondary
+        start: 27
+        end: 65
+  "try { run(); } catch (e) { throw new Error('x', 'y', { cause: e }); }":
+    labels:
+      - source: "catch (e) { throw new Error('x', 'y', { cause: e }); }"
+        style: primary
+        start: 15
+        end: 69
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 62
+        end: 63
+      - source: "throw new Error('x', 'y', { cause: e });"
+        style: secondary
+        start: 27
+        end: 67
+      - source: "throw new Error('x', 'y', { cause: e });"
+        style: secondary
+        start: 27
+        end: 67
+  "try { run(); } catch (e) { throw new Error('x', wrap({ cause: e })); }":
+    labels:
+      - source: "catch (e) { throw new Error('x', wrap({ cause: e })); }"
+        style: primary
+        start: 15
+        end: 70
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 62
+        end: 63
+      - source: "throw new Error('x', wrap({ cause: e }));"
+        style: secondary
+        start: 27
+        end: 68
+      - source: "throw new Error('x', wrap({ cause: e }));"
+        style: secondary
+        start: 27
+        end: 68
+  "try { run(); } catch (e) { throw new Error('x', { 'cause': e }); }":
+    labels:
+      - source: "catch (e) { throw new Error('x', { 'cause': e }); }"
+        style: primary
+        start: 15
+        end: 66
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 59
+        end: 60
+      - source: "throw new Error('x', { 'cause': e });"
+        style: secondary
+        start: 27
+        end: 64
+      - source: "throw new Error('x', { 'cause': e });"
+        style: secondary
+        start: 27
+        end: 64
+  "try { run(); } catch (e) { throw new Error('x', { cause: String(e) }); }":
+    labels:
+      - source: "catch (e) { throw new Error('x', { cause: String(e) }); }"
+        style: primary
+        start: 15
+        end: 72
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 64
+        end: 65
+      - source: "throw new Error('x', { cause: String(e) });"
+        style: secondary
+        start: 27
+        end: 70
+      - source: "throw new Error('x', { cause: String(e) });"
+        style: secondary
+        start: 27
+        end: 70
+  "try { run(); } catch (e) { throw new Error('x', { cause: console.error(e) }); }":
+    labels:
+      - source: "catch (e) { throw new Error('x', { cause: console.error(e) }); }"
+        style: primary
+        start: 15
+        end: 79
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 71
+        end: 72
+      - source: "throw new Error('x', { cause: console.error(e) });"
+        style: secondary
+        start: 27
+        end: 77
+      - source: "throw new Error('x', { cause: console.error(e) });"
+        style: secondary
+        start: 27
+        end: 77
+  "try { run(); } catch (e) { throw new Error('x', { cause: e }, ...args); }":
+    labels:
+      - source: "catch (e) { throw new Error('x', { cause: e }, ...args); }"
+        style: primary
+        start: 15
+        end: 73
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 57
+        end: 58
+      - source: "throw new Error('x', { cause: e }, ...args);"
+        style: secondary
+        start: 27
+        end: 71
+      - source: "throw new Error('x', { cause: e }, ...args);"
+        style: secondary
+        start: 27
+        end: 71
+  "try { run(); } catch (e) { throw new Error('x', { cause: e, ...other }); }":
+    labels:
+      - source: "catch (e) { throw new Error('x', { cause: e, ...other }); }"
+        style: primary
+        start: 15
+        end: 74
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 57
+        end: 58
+      - source: "throw new Error('x', { cause: e, ...other });"
+        style: secondary
+        start: 27
+        end: 72
+      - source: "throw new Error('x', { cause: e, ...other });"
+        style: secondary
+        start: 27
+        end: 72
+  "try { run(); } catch (e) { throw new Error('x', { cause: e, ['cause']: undefined }); }":
+    labels:
+      - source: "catch (e) { throw new Error('x', { cause: e, ['cause']: undefined }); }"
+        style: primary
+        start: 15
+        end: 86
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 57
+        end: 58
+      - source: "throw new Error('x', { cause: e, ['cause']: undefined });"
+        style: secondary
+        start: 27
+        end: 84
+      - source: "throw new Error('x', { cause: e, ['cause']: undefined });"
+        style: secondary
+        start: 27
+        end: 84
+  "try { run(); } catch (e) { throw new Error('x', { message: e }); }":
+    labels:
+      - source: "catch (e) { throw new Error('x', { message: e }); }"
+        style: primary
+        start: 15
+        end: 66
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 59
+        end: 60
+      - source: "throw new Error('x', { message: e });"
+        style: secondary
+        start: 27
+        end: 64
+      - source: "throw new Error('x', { message: e });"
+        style: secondary
+        start: 27
+        end: 64
+  "try { run(); } catch (e) { throw new Error(...args, { cause: e }); }":
+    labels:
+      - source: "catch (e) { throw new Error(...args, { cause: e }); }"
+        style: primary
+        start: 15
+        end: 68
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 61
+        end: 62
+      - source: "throw new Error(...args, { cause: e });"
+        style: secondary
+        start: 27
+        end: 66
+      - source: "throw new Error(...args, { cause: e });"
+        style: secondary
+        start: 27
+        end: 66
+  "try { run(); } catch (e) { throw new Error(String(e)); }":
+    labels:
+      - source: catch (e) { throw new Error(String(e)); }
+        style: primary
+        start: 15
+        end: 56
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 50
+        end: 51
+      - source: throw new Error(String(e));
+        style: secondary
+        start: 27
+        end: 54
+      - source: throw new Error(String(e));
+        style: secondary
+        start: 27
+        end: 54
+  "try { run(); } catch (e) { throw new Error({ cause: e }); }":
+    labels:
+      - source: "catch (e) { throw new Error({ cause: e }); }"
+        style: primary
+        start: 15
+        end: 59
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 52
+        end: 53
+      - source: "throw new Error({ cause: e });"
+        style: secondary
+        start: 27
+        end: 57
+      - source: "throw new Error({ cause: e });"
+        style: secondary
+        start: 27
+        end: 57
+  "try { run(); } catch (e) { throw new Foo.Error('x', { cause: e }); }":
+    labels:
+      - source: "catch (e) { throw new Foo.Error('x', { cause: e }); }"
+        style: primary
+        start: 15
+        end: 68
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 61
+        end: 62
+      - source: "throw new Foo.Error('x', { cause: e });"
+        style: secondary
+        start: 27
+        end: 66
+      - source: "throw new Foo.Error('x', { cause: e });"
+        style: secondary
+        start: 27
+        end: 66
+  "try { run(); } catch (e) { throw wrap(e); }":
+    labels:
+      - source: catch (e) { throw wrap(e); }
+        style: primary
+        start: 15
+        end: 43
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 38
+        end: 39
+      - source: throw wrap(e);
+        style: secondary
+        start: 27
+        end: 41
+      - source: throw wrap(e);
+        style: secondary
+        start: 27
+        end: 41
+  "try { run(); } catch (e) { throw { e }; }":
+    labels:
+      - source: catch (e) { throw { e }; }
+        style: primary
+        start: 15
+        end: 41
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 35
+        end: 36
+      - source: throw { e };
+        style: secondary
+        start: 27
+        end: 39
+      - source: throw { e };
+        style: secondary
+        start: 27
+        end: 39
+  "try { run(); } catch (e) { throw { error: e }; }":
+    labels:
+      - source: "catch (e) { throw { error: e }; }"
+        style: primary
+        start: 15
+        end: 48
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 42
+        end: 43
+      - source: "throw { error: e };"
+        style: secondary
+        start: 27
+        end: 46
+      - source: "throw { error: e };"
+        style: secondary
+        start: 27
+        end: 46
+  "try { run(); } catch (e) { try { next(); } catch (e) { return console.error(e); } throw e; }":
+    labels:
+      - source: catch (e) { try { next(); } catch (e) { return console.error(e); } throw e; }
+        style: primary
+        start: 15
+        end: 92
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 76
+        end: 77
+      - source: return console.error(e);
+        style: secondary
+        start: 55
+        end: 79
+      - source: return console.error(e);
+        style: secondary
+        start: 55
+        end: 79
+  "try { run(); } catch (e) { try { next(); } catch (inner) { if (flag) { return console.error(e); } throw inner; } throw e; }":
+    labels:
+      - source: >-
+          catch (e) { try { next(); } catch (inner) { if (flag) { return
+          console.error(e); } throw inner; } throw e; }
+        style: primary
+        start: 15
+        end: 123
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 92
+        end: 93
+      - source: return console.error(e);
+        style: secondary
+        start: 71
+        end: 95
+      - source: return console.error(e);
+        style: secondary
+        start: 71
+        end: 95
+  "try { run(); } catch (e) { try { next(); } catch (inner) { return `${e}`; } throw e; }":
+    labels:
+      - source: catch (e) { try { next(); } catch (inner) { return `${e}`; } throw e; }
+        style: primary
+        start: 15
+        end: 86
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 69
+        end: 70
+      - source: return `${e}`;
+        style: secondary
+        start: 59
+        end: 73
+      - source: return `${e}`;
+        style: secondary
+        start: 59
+        end: 73
+  "try { run(); } catch (e) { try { next(); } catch (inner) { throw new Error(String(e), { cause: inner }); } throw e; }":
+    labels:
+      - source: "catch (e) { try { next(); } catch (inner) { throw new Error(String(e), { cause: inner }); } throw e; }"
+        style: primary
+        start: 15
+        end: 117
+      - source: e
+        style: secondary
+        start: 22
+        end: 23
+      - source: e
+        style: secondary
+        start: 82
+        end: 83
+      - source: "throw new Error(String(e), { cause: inner });"
+        style: secondary
+        start: 59
+        end: 104
+      - source: "throw new Error(String(e), { cause: inner });"
+        style: secondary
+        start: 59
+        end: 104

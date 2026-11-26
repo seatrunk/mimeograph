@@ -1,0 +1,182 @@
+id: no-swallowed-catch
+snapshots:
+  "try { run(); } catch (e) { console.error(e); }":
+    labels:
+      - source: catch (e) { console.error(e); }
+        style: primary
+        start: 15
+        end: 46
+  "try { run(); } catch (e) { const f = () => { throw e; }; console.error(f); }":
+    labels:
+      - source: catch (e) { const f = () => { throw e; }; console.error(f); }
+        style: primary
+        start: 15
+        end: 76
+  "try { run(); } catch (e) { const f = function () { return e; }; console.error(f); }":
+    labels:
+      - source: catch (e) { const f = function () { return e; }; console.error(f); }
+        style: primary
+        start: 15
+        end: 83
+  "try { run(); } catch (e) { const m = String(e); console.error(m); }":
+    labels:
+      - source: catch (e) { const m = String(e); console.error(m); }
+        style: primary
+        start: 15
+        end: 67
+  "try { run(); } catch (e) { const o = { e: 1 }; return o; }":
+    labels:
+      - source: "catch (e) { const o = { e: 1 }; return o; }"
+        style: primary
+        start: 15
+        end: 58
+  "try { run(); } catch (e) { for (const x of xs) { if (x) { throw e; } } return null; }":
+    labels:
+      - source: catch (e) { for (const x of xs) { if (x) { throw e; } } return null; }
+        style: primary
+        start: 15
+        end: 85
+  "try { run(); } catch (e) { if (a) { return null; } else { throw e; } }":
+    labels:
+      - source: catch (e) { if (a) { return null; } else { throw e; } }
+        style: primary
+        start: 15
+        end: 70
+  "try { run(); } catch (e) { if (a) { throw e; } else if (b) { throw e; } else { throw e; } }":
+    labels:
+      - source: catch (e) { if (a) { throw e; } else if (b) { throw e; } else { throw e; } }
+        style: primary
+        start: 15
+        end: 91
+  "try { run(); } catch (e) { if (a) { throw e; } else if (b) { throw e; } }":
+    labels:
+      - source: catch (e) { if (a) { throw e; } else if (b) { throw e; } }
+        style: primary
+        start: 15
+        end: 73
+  "try { run(); } catch (e) { if (a) { throw e; } else { return null; } }":
+    labels:
+      - source: catch (e) { if (a) { throw e; } else { return null; } }
+        style: primary
+        start: 15
+        end: 70
+  "try { run(); } catch (e) { if (c) { return { ok: false, error: e }; } else { return null; } }":
+    labels:
+      - source: "catch (e) { if (c) { return { ok: false, error: e }; } else { return null; } }"
+        style: primary
+        start: 15
+        end: 93
+  "try { run(); } catch (e) { if (c) { throw e; } return null; }":
+    labels:
+      - source: catch (e) { if (c) { throw e; } return null; }
+        style: primary
+        start: 15
+        end: 61
+  "try { run(); } catch (e) { if (c) { throw e; } }":
+    labels:
+      - source: catch (e) { if (c) { throw e; } }
+        style: primary
+        start: 15
+        end: 48
+  "try { run(); } catch (e) { items.map(() => { throw e; }); }":
+    labels:
+      - source: catch (e) { items.map(() => { throw e; }); }
+        style: primary
+        start: 15
+        end: 59
+  "try { run(); } catch (e) { log(e); }":
+    labels:
+      - source: catch (e) { log(e); }
+        style: primary
+        start: 15
+        end: 36
+  "try { run(); } catch (e) { return fallback.e; }":
+    labels:
+      - source: catch (e) { return fallback.e; }
+        style: primary
+        start: 15
+        end: 47
+  "try { run(); } catch (e) { return null; }":
+    labels:
+      - source: catch (e) { return null; }
+        style: primary
+        start: 15
+        end: 41
+  "try { run(); } catch (e) { switch (k) { case 1: throw e; } }":
+    labels:
+      - source: "catch (e) { switch (k) { case 1: throw e; } }"
+        style: primary
+        start: 15
+        end: 60
+  "try { run(); } catch (e) { throw e; log(e); }":
+    labels:
+      - source: catch (e) { throw e; log(e); }
+        style: primary
+        start: 15
+        end: 45
+  "try { run(); } catch (e) { throw new Error('falhou'); }":
+    labels:
+      - source: catch (e) { throw new Error('falhou'); }
+        style: primary
+        start: 15
+        end: 55
+  "try { run(); } catch (e) { try { next(); } catch (e) { throw e; } }":
+    labels:
+      - source: catch (e) { try { next(); } catch (e) { throw e; } }
+        style: primary
+        start: 15
+        end: 67
+  "try { run(); } catch (e) { try { next(); } catch (x) { if (c) { throw e; } throw new Error('y', { cause: x }); } }":
+    labels:
+      - source: "catch (e) { try { next(); } catch (x) { if (c) { throw e; } throw new Error('y', { cause: x }); } }"
+        style: primary
+        start: 15
+        end: 114
+  "try { run(); } catch (e) { try { next(); } catch (x) { return { error: e }; } }":
+    labels:
+      - source: "catch (e) { try { next(); } catch (x) { return { error: e }; } }"
+        style: primary
+        start: 15
+        end: 79
+  "try { run(); } catch (e) { try { next(); } catch (x) { throw e; } }":
+    labels:
+      - source: catch (e) { try { next(); } catch (x) { throw e; } }
+        style: primary
+        start: 15
+        end: 67
+  "try { run(); } catch (e) {}":
+    labels:
+      - source: catch (e) {}
+        style: primary
+        start: 15
+        end: 27
+  "try { run(); } catch ({ message }) { return { message }; }":
+    labels:
+      - source: catch ({ message }) { return { message }; }
+        style: primary
+        start: 15
+        end: 58
+  "try { run(); } catch ({ message }) { throw new Error(message); }":
+    labels:
+      - source: catch ({ message }) { throw new Error(message); }
+        style: primary
+        start: 15
+        end: 64
+  "try { run(); } catch { return null; }":
+    labels:
+      - source: catch { return null; }
+        style: primary
+        start: 15
+        end: 37
+  "try { run(); } catch { throw new Error('falhou'); }":
+    labels:
+      - source: catch { throw new Error('falhou'); }
+        style: primary
+        start: 15
+        end: 51
+  "try { run(); } catch {}":
+    labels:
+      - source: catch {}
+        style: primary
+        start: 15
+        end: 23

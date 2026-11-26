@@ -1,0 +1,122 @@
+id: feature-no-parent-import
+snapshots:
+  const m = await import("../example-a/index.ts");:
+    labels:
+      - source: '"../example-a/index.ts"'
+        style: primary
+        start: 23
+        end: 46
+  const m = await import("./../example-a/index.ts");:
+    labels:
+      - source: '"./../example-a/index.ts"'
+        style: primary
+        start: 23
+        end: 48
+  "const m = await import('../example-a/doubler.ts', {});":
+    labels:
+      - source: "'../example-a/doubler.ts'"
+        style: primary
+        start: 23
+        end: 48
+  "const m = await import('./../example-a/doubler.ts', { with: { type: 'json' } });":
+    labels:
+      - source: "'./../example-a/doubler.ts'"
+        style: primary
+        start: 23
+        end: 50
+  const m = await import(`../example-a/index.ts`);:
+    labels:
+      - source: "`../example-a/index.ts`"
+        style: primary
+        start: 23
+        end: 46
+  const m = await import(`./../example-a/index.ts`);:
+    labels:
+      - source: "`./../example-a/index.ts`"
+        style: primary
+        start: 23
+        end: 48
+  const m = require("./sub/../../example-a/index.ts");:
+    labels:
+      - source: '"./sub/../../example-a/index.ts"'
+        style: primary
+        start: 18
+        end: 50
+  "const m = require('../example-a/doubler.ts', extra);":
+    labels:
+      - source: "'../example-a/doubler.ts'"
+        style: primary
+        start: 18
+        end: 43
+  export * as ns from "../example-a/index.ts";:
+    labels:
+      - source: '"../example-a/index.ts"'
+        style: primary
+        start: 20
+        end: 43
+  export * from "../example-a/index.ts";:
+    labels:
+      - source: '"../example-a/index.ts"'
+        style: primary
+        start: 14
+        end: 37
+  'export { a } from "./../example-a/index.ts";':
+    labels:
+      - source: '"./../example-a/index.ts"'
+        style: primary
+        start: 18
+        end: 43
+  import "../example-a/doubler.ts";:
+    labels:
+      - source: '"../example-a/doubler.ts"'
+        style: primary
+        start: 7
+        end: 32
+  'import type { A } from "../example-a/doubler.ts";':
+    labels:
+      - source: '"../example-a/doubler.ts"'
+        style: primary
+        start: 23
+        end: 48
+  import x = require('../example-a/doubler.ts');:
+    labels:
+      - source: "'../example-a/doubler.ts'"
+        style: primary
+        start: 19
+        end: 44
+  'import { a } from "..";':
+    labels:
+      - source: '".."'
+        style: primary
+        start: 18
+        end: 22
+  'import { a } from "../example-a/doubler.ts";':
+    labels:
+      - source: '"../example-a/doubler.ts"'
+        style: primary
+        start: 18
+        end: 43
+  'import { a } from "./../example-a/doubler.ts";':
+    labels:
+      - source: '"./../example-a/doubler.ts"'
+        style: primary
+        start: 18
+        end: 45
+  'import { a } from "./a/..";':
+    labels:
+      - source: '"./a/.."'
+        style: primary
+        start: 18
+        end: 26
+  'import { a } from "./sub/../../example-a/doubler.ts";':
+    labels:
+      - source: '"./sub/../../example-a/doubler.ts"'
+        style: primary
+        start: 18
+        end: 52
+  type T = typeof import("../example-a/index.ts");:
+    labels:
+      - source: '"../example-a/index.ts"'
+        style: primary
+        start: 23
+        end: 46

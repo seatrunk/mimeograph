@@ -1,0 +1,13 @@
+id: feature-public-api-only
+language: Tsx
+severity: error
+message: "Importe outra feature apenas pela porta pública, `#features/<nome>` (resolve para index.ts). Não importe arquivo interno de feature."
+files:
+  - src/**
+rule:
+  all:
+    - any:
+        - kind: string
+        - kind: template_string
+    - matches: load-specifier
+    - regex: '^["''`](#features/+[^/"''`]+/|#[^"''`]*/\.\.(/|["''`])|\.{1,2}/([^"''`]*/)?features/+[^/"''`]+/)'

@@ -1,0 +1,41 @@
+id: import-especificador-literal
+valid:
+  - 'const m = await import("./a.ts");'
+  - 'const m = await import("#features/example-a");'
+  - 'const m = require("./a.ts");'
+  - "const m = await import('node:fs');"
+  - 'type T = typeof import("./a.ts");'
+  - "const m = await import('./a.ts', {});"
+  - "const r = schema.require('id');"
+  - "const o = { require: 1 };"
+  - "const m = await import('node:fs', { with: { type: 'json' } });"
+invalid:
+  - "const m = await import(`./a.ts`);"
+  - 'const m = await import(`#features/${"example-a"}/doubler.ts`);'
+  - "const m = await import(`../${name}/doubler.ts`);"
+  - "const m = await import(name);"
+  - 'const m = await import("./" + name);'
+  - 'const m = await import(cond ? "./a.ts" : "./b.ts");'
+  - 'const m = await import(name, { with: { type: "json" } });'
+  - "const m = require(name);"
+  - "const m = require(`./a.ts`);"
+  - 'const m = require(["./a", "ts"].join("."));'
+  - 'const m = createRequire(import.meta.url)("../a.ts");'
+  - 'import { createRequire } from "node:module";'
+  - 'const r = require; r("../a.ts");'
+  - 'const m = module.require("../a.ts");'
+  - 'const m = import.meta.resolve("../a.ts");'
+  - "const m = await import(name, {});"
+  - "const m = await import(('../a.ts'));"
+  - "const m = await import(`./a.ts`, {});"
+  - "import * as mod from 'node:module'; const r = mod.createRequire(import.meta.url);"
+  - "const r = process.getBuiltinModule('node:module');"
+  - "const m = process.mainModule;"
+  - "const r = m['require']('../a.ts');"
+  - "const r = m['createRequire'];"
+  - "const r = import.meta['resolve']('../a.ts');"
+  - "const r = import.meta[name]('../a.ts');"
+  - "const { createRequire } = mod;"
+  - "const r = (0, require)('../a.ts');"
+  - "const r = require.main.require('../a.ts');"
+  - "const r = require.resolve('../a.ts');"

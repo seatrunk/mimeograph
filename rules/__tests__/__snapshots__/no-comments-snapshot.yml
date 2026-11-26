@@ -1,0 +1,92 @@
+id: no-comments
+snapshots:
+  "#!/usr/bin/env node\nexport const a = 1;":
+    labels:
+      - source: "#!/usr/bin/env node"
+        style: primary
+        start: 0
+        end: 19
+  "/* bloco */\nexport const a = 1;":
+    labels:
+      - source: /* bloco */
+        style: primary
+        start: 0
+        end: 11
+  "/** doc */\nexport function f() {}":
+    labels:
+      - source: /** doc */
+        style: primary
+        start: 0
+        end: 10
+  "// comentario\nexport const a = 1;":
+    labels:
+      - source: // comentario
+        style: primary
+        start: 0
+        end: 13
+  "/// <reference comentario disfarcado\nexport const a = 1;":
+    labels:
+      - source: /// <reference comentario disfarcado
+        style: primary
+        start: 0
+        end: 36
+  "/// <reference no-default-lib=\"true\" />\nexport const a = 1;":
+    labels:
+      - source: /// <reference no-default-lib="true" />
+        style: primary
+        start: 0
+        end: 39
+  "/// <reference outro=\"x\" />\nexport const a = 1;":
+    labels:
+      - source: /// <reference outro="x" />
+        style: primary
+        start: 0
+        end: 27
+  "/// <reference path=\"../example-a/doubler.ts\" />\nexport const a = 1;":
+    labels:
+      - source: /// <reference path="../example-a/doubler.ts" />
+        style: primary
+        start: 0
+        end: 48
+  "/// <reference path=\"./tipos.d.ts\" />\nexport const a = 1;":
+    labels:
+      - source: /// <reference path="./tipos.d.ts" />
+        style: primary
+        start: 0
+        end: 37
+  "/// <reference types=\"../src/features/example-a/doubler\" />\nexport const a = 1;":
+    labels:
+      - source: /// <reference types="../src/features/example-a/doubler" />
+        style: primary
+        start: 0
+        end: 59
+  "/// <reference types=\"a/../../b\" />\nexport const a = 1;":
+    labels:
+      - source: /// <reference types="a/../../b" />
+        style: primary
+        start: 0
+        end: 35
+  "/// <reference types=\"node\"\nexport const a = 1;":
+    labels:
+      - source: /// <reference types="node"
+        style: primary
+        start: 0
+        end: 27
+  "/// <reference types=\"node\" /> comentario extra\nexport const a = 1;":
+    labels:
+      - source: /// <reference types="node" /> comentario extra
+        style: primary
+        start: 0
+        end: 47
+  "/// <referencia types=\"node\" />\nexport const a = 1;":
+    labels:
+      - source: /// <referencia types="node" />
+        style: primary
+        start: 0
+        end: 31
+  export const a = 1; // inline:
+    labels:
+      - source: // inline
+        style: primary
+        start: 20
+        end: 29

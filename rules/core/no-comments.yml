@@ -1,0 +1,10 @@
+id: no-comments
+language: Tsx
+severity: error
+message: 'Comentário proibido, inclusive shebang, em qualquer arquivo TypeScript ou JavaScript do repositório. Renomeie, extraia função ou escreva um teste que documente o comportamento. Única exceção permitida, a diretiva completa `/// <reference types="pacote" />` ou `/// <reference lib="nome" />`, sem caminho relativo.'
+rule:
+  any:
+    - kind: comment
+      not:
+        regex: '^///\s*<reference\s+(types|lib)="[@A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*(/[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*)*"\s*/>\s*$'
+    - kind: hash_bang_line

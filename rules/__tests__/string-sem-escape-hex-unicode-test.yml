@@ -1,0 +1,23 @@
+id: string-sem-escape-hex-unicode
+valid:
+  - "const a = 'linha\\n';"
+  - "const a = 'aba\\t';"
+  - "const a = 'aspas\\'';"
+  - "const a = 'normal';"
+  - "const a = `normal ${b}`;"
+  - "const a = 'barra\\\\';"
+  - "const a = \"aspas\\\"\";"
+  - "const a = `\\${literal}`;"
+  - "const a = `preco: \\$${valor}`;"
+  - "const a = `\\\\x41${valor}`;"
+invalid:
+  - "const a = '..\\/example-a/x';"
+  - "const a = '.\\\n./example-a/x';"
+  - "const a = 'a\\0b';"
+  - "const a = 'a\\vb';"
+  - "const a = '\\x2e\\x2e/example-a';"
+  - "const a = 'use\\x45ffect';"
+  - "const a = 'use\\u0045ffect';"
+  - "const a = 'use\\u{45}ffect';"
+  - "const a = `use\\x45ffect`;"
+  - "import { a } from '\\x2e\\x2e/example-a/doubler.ts';"

@@ -1,0 +1,13 @@
+id: shared-no-features
+language: Tsx
+severity: error
+message: "src/shared não pode depender de features. Mova o código para a feature ou inverta a dependência, passando o valor como parâmetro."
+files:
+  - src/shared/**
+rule:
+  all:
+    - any:
+        - kind: string
+        - kind: template_string
+    - matches: load-specifier
+    - regex: '^["''`](#features/|\.{1,2}/([^"''`]*/)?features/)'

@@ -1,0 +1,636 @@
+id: no-shadow-native-error
+snapshots:
+  "([Error] = [Fake]);":
+    labels:
+      - source: Error
+        style: primary
+        start: 2
+        end: 7
+      - source: "[Error]"
+        style: secondary
+        start: 1
+        end: 8
+  Error = Fake;:
+    labels:
+      - source: Error
+        style: primary
+        start: 0
+        end: 5
+      - source: Error = Fake
+        style: secondary
+        start: 0
+        end: 12
+  "Object.assign(globalThis, { Promise: Fake });":
+    labels:
+      - source: "Object.assign(globalThis, { Promise: Fake })"
+        style: primary
+        start: 0
+        end: 44
+      - source: Object
+        style: secondary
+        start: 0
+        end: 6
+      - source: assign
+        style: secondary
+        start: 7
+        end: 13
+      - source: Object.assign
+        style: secondary
+        start: 0
+        end: 13
+      - source: globalThis
+        style: secondary
+        start: 14
+        end: 24
+      - source: globalThis
+        style: secondary
+        start: 14
+        end: 24
+  "Object.defineProperties(window, {});":
+    labels:
+      - source: Object.defineProperties(window, {})
+        style: primary
+        start: 0
+        end: 35
+      - source: Object
+        style: secondary
+        start: 0
+        end: 6
+      - source: defineProperties
+        style: secondary
+        start: 7
+        end: 23
+      - source: Object.defineProperties
+        style: secondary
+        start: 0
+        end: 23
+      - source: window
+        style: secondary
+        start: 24
+        end: 30
+      - source: window
+        style: secondary
+        start: 24
+        end: 30
+  "Object.defineProperty(globalThis, 'Error', { value: Fake });":
+    labels:
+      - source: "Object.defineProperty(globalThis, 'Error', { value: Fake })"
+        style: primary
+        start: 0
+        end: 59
+      - source: Object
+        style: secondary
+        start: 0
+        end: 6
+      - source: defineProperty
+        style: secondary
+        start: 7
+        end: 21
+      - source: Object.defineProperty
+        style: secondary
+        start: 0
+        end: 21
+      - source: globalThis
+        style: secondary
+        start: 22
+        end: 32
+      - source: globalThis
+        style: secondary
+        start: 22
+        end: 32
+  "Object.defineProperty(window, 'Promise', { value: Fake });":
+    labels:
+      - source: "Object.defineProperty(window, 'Promise', { value: Fake })"
+        style: primary
+        start: 0
+        end: 57
+      - source: Object
+        style: secondary
+        start: 0
+        end: 6
+      - source: defineProperty
+        style: secondary
+        start: 7
+        end: 21
+      - source: Object.defineProperty
+        style: secondary
+        start: 0
+        end: 21
+      - source: window
+        style: secondary
+        start: 22
+        end: 28
+      - source: window
+        style: secondary
+        start: 22
+        end: 28
+  "Reflect.defineProperty(globalThis, 'Error', { value: Fake });":
+    labels:
+      - source: "Reflect.defineProperty(globalThis, 'Error', { value: Fake })"
+        style: primary
+        start: 0
+        end: 60
+      - source: Reflect
+        style: secondary
+        start: 0
+        end: 7
+      - source: defineProperty
+        style: secondary
+        start: 8
+        end: 22
+      - source: Reflect.defineProperty
+        style: secondary
+        start: 0
+        end: 22
+      - source: globalThis
+        style: secondary
+        start: 23
+        end: 33
+      - source: globalThis
+        style: secondary
+        start: 23
+        end: 33
+  "Reflect.set(globalThis, 'Error', Fake);":
+    labels:
+      - source: Reflect.set(globalThis, 'Error', Fake)
+        style: primary
+        start: 0
+        end: 38
+      - source: Reflect
+        style: secondary
+        start: 0
+        end: 7
+      - source: set
+        style: secondary
+        start: 8
+        end: 11
+      - source: Reflect.set
+        style: secondary
+        start: 0
+        end: 11
+      - source: globalThis
+        style: secondary
+        start: 12
+        end: 22
+      - source: globalThis
+        style: secondary
+        start: 12
+        end: 22
+  "Reflect.set(self, 'Error', Fake);":
+    labels:
+      - source: Reflect.set(self, 'Error', Fake)
+        style: primary
+        start: 0
+        end: 32
+      - source: Reflect
+        style: secondary
+        start: 0
+        end: 7
+      - source: set
+        style: secondary
+        start: 8
+        end: 11
+      - source: Reflect.set
+        style: secondary
+        start: 0
+        end: 11
+      - source: self
+        style: secondary
+        start: 12
+        end: 16
+      - source: self
+        style: secondary
+        start: 12
+        end: 16
+  "class Error {}":
+    labels:
+      - source: Error
+        style: primary
+        start: 6
+        end: 11
+      - source: class Error {}
+        style: secondary
+        start: 0
+        end: 14
+  "class TypeError extends Base {}":
+    labels:
+      - source: TypeError
+        style: primary
+        start: 6
+        end: 15
+      - source: class TypeError extends Base {}
+        style: secondary
+        start: 0
+        end: 31
+  const AggregateError = Foo;:
+    labels:
+      - source: AggregateError
+        style: primary
+        start: 6
+        end: 20
+      - source: AggregateError = Foo
+        style: secondary
+        start: 6
+        end: 26
+  const Error = AppError;:
+    labels:
+      - source: Error
+        style: primary
+        start: 6
+        end: 11
+      - source: Error = AppError
+        style: secondary
+        start: 6
+        end: 22
+  "const Promise = { reject: () => null };":
+    labels:
+      - source: Promise
+        style: primary
+        start: 6
+        end: 13
+      - source: "Promise = { reject: () => null }"
+        style: secondary
+        start: 6
+        end: 38
+  "const [Error = x] = arr;":
+    labels:
+      - source: Error
+        style: primary
+        start: 7
+        end: 12
+      - source: "[Error = x]"
+        style: secondary
+        start: 6
+        end: 17
+  "const [Error] = c;":
+    labels:
+      - source: Error
+        style: primary
+        start: 7
+        end: 12
+      - source: "[Error]"
+        style: secondary
+        start: 6
+        end: 13
+  const f = (Error) => 1;:
+    labels:
+      - source: Error
+        style: primary
+        start: 11
+        end: 16
+      - source: Error
+        style: secondary
+        start: 11
+        end: 16
+  const f = Error => 1;:
+    labels:
+      - source: Error
+        style: primary
+        start: 10
+        end: 15
+      - source: Error => 1
+        style: secondary
+        start: 10
+        end: 20
+  const g = globalThis; g.Error = Fake;:
+    labels:
+      - source: g.Error = Fake
+        style: primary
+        start: 22
+        end: 36
+      - source: Error
+        style: secondary
+        start: 24
+        end: 29
+      - source: g.Error
+        style: secondary
+        start: 22
+        end: 29
+  "const globalThis = {};":
+    labels:
+      - source: globalThis
+        style: primary
+        start: 6
+        end: 16
+      - source: globalThis = {}
+        style: secondary
+        start: 6
+        end: 21
+  "const { Error = x } = opts;":
+    labels:
+      - source: Error
+        style: primary
+        start: 8
+        end: 13
+      - source: "{ Error = x }"
+        style: secondary
+        start: 6
+        end: 19
+  "const { Error } = c;":
+    labels:
+      - source: Error
+        style: primary
+        start: 8
+        end: 13
+      - source: "{ Error }"
+        style: secondary
+        start: 6
+        end: 15
+  "const { a: Error = x } = opts;":
+    labels:
+      - source: Error
+        style: primary
+        start: 11
+        end: 16
+      - source: "{ a: Error = x }"
+        style: secondary
+        start: 6
+        end: 22
+  "const { a: Error } = c;":
+    labels:
+      - source: Error
+        style: primary
+        start: 11
+        end: 16
+      - source: "{ a: Error }"
+        style: secondary
+        start: 6
+        end: 18
+  "const { a: [Promise] } = c;":
+    labels:
+      - source: Promise
+        style: primary
+        start: 12
+        end: 19
+      - source: "[Promise]"
+        style: secondary
+        start: 11
+        end: 20
+  "const { a: { Promise = x } } = opts;":
+    labels:
+      - source: Promise
+        style: primary
+        start: 13
+        end: 20
+      - source: "{ Promise = x }"
+        style: secondary
+        start: 11
+        end: 26
+  "declare const Error: unknown;":
+    labels:
+      - source: Error
+        style: primary
+        start: 14
+        end: 19
+      - source: "Error: unknown"
+        style: secondary
+        start: 14
+        end: 28
+  "enum Error { A }":
+    labels:
+      - source: Error
+        style: primary
+        start: 5
+        end: 10
+      - source: enum Error { A }
+        style: secondary
+        start: 0
+        end: 16
+  "export default class Error {}":
+    labels:
+      - source: Error
+        style: primary
+        start: 21
+        end: 26
+      - source: class Error {}
+        style: secondary
+        start: 15
+        end: 29
+  "for (const Error of xs) {}":
+    labels:
+      - source: Error
+        style: primary
+        start: 11
+        end: 16
+      - source: for (const Error of xs) {}
+        style: secondary
+        start: 0
+        end: 26
+  "function RangeError() {}":
+    labels:
+      - source: RangeError
+        style: primary
+        start: 9
+        end: 19
+      - source: function RangeError() {}
+        style: secondary
+        start: 0
+        end: 24
+  "function f(...Error: unknown[]) {}":
+    labels:
+      - source: Error
+        style: primary
+        start: 14
+        end: 19
+      - source: ...Error
+        style: secondary
+        start: 11
+        end: 19
+  "function f(Error) {}":
+    labels:
+      - source: Error
+        style: primary
+        start: 11
+        end: 16
+      - source: Error
+        style: secondary
+        start: 11
+        end: 16
+  "function f(Error: unknown) {}":
+    labels:
+      - source: Error
+        style: primary
+        start: 11
+        end: 16
+      - source: "Error: unknown"
+        style: secondary
+        start: 11
+        end: 25
+  global.TypeError = Fake;:
+    labels:
+      - source: global.TypeError = Fake
+        style: primary
+        start: 0
+        end: 23
+      - source: TypeError
+        style: secondary
+        start: 7
+        end: 16
+      - source: global.TypeError
+        style: secondary
+        start: 0
+        end: 16
+  globalThis.Error = Fake;:
+    labels:
+      - source: globalThis.Error = Fake
+        style: primary
+        start: 0
+        end: 23
+      - source: Error
+        style: secondary
+        start: 11
+        end: 16
+      - source: globalThis.Error
+        style: secondary
+        start: 0
+        end: 16
+  "globalThis['Error'] = Fake;":
+    labels:
+      - source: globalThis['Error'] = Fake
+        style: primary
+        start: 0
+        end: 26
+      - source: globalThis
+        style: secondary
+        start: 0
+        end: 10
+      - source: globalThis['Error']
+        style: secondary
+        start: 0
+        end: 19
+  holder.Promise = Fake;:
+    labels:
+      - source: holder.Promise = Fake
+        style: primary
+        start: 0
+        end: 21
+      - source: Promise
+        style: secondary
+        start: 7
+        end: 14
+      - source: holder.Promise
+        style: secondary
+        start: 0
+        end: 14
+  import * as Error from './fake.ts';:
+    labels:
+      - source: Error
+        style: primary
+        start: 12
+        end: 17
+      - source: "* as Error"
+        style: secondary
+        start: 7
+        end: 17
+  import Error from './fake.ts';:
+    labels:
+      - source: Error
+        style: primary
+        start: 7
+        end: 12
+      - source: Error
+        style: secondary
+        start: 7
+        end: 12
+  "import Promise, { x } from './fake.ts';":
+    labels:
+      - source: Promise
+        style: primary
+        start: 7
+        end: 14
+      - source: Promise, { x }
+        style: secondary
+        start: 7
+        end: 21
+  'import { Error } from "x";':
+    labels:
+      - source: Error
+        style: primary
+        start: 9
+        end: 14
+      - source: Error
+        style: secondary
+        start: 9
+        end: 14
+  'import { Foo as TypeError } from "x";':
+    labels:
+      - source: TypeError
+        style: primary
+        start: 16
+        end: 25
+      - source: Foo as TypeError
+        style: secondary
+        start: 9
+        end: 25
+  let TypeError;:
+    labels:
+      - source: TypeError
+        style: primary
+        start: 4
+        end: 13
+      - source: TypeError
+        style: secondary
+        start: 4
+        end: 13
+  let URIError = Foo;:
+    labels:
+      - source: URIError
+        style: primary
+        start: 4
+        end: 12
+      - source: URIError = Foo
+        style: secondary
+        start: 4
+        end: 18
+  self.Error = Fake;:
+    labels:
+      - source: self.Error = Fake
+        style: primary
+        start: 0
+        end: 17
+      - source: Error
+        style: secondary
+        start: 5
+        end: 10
+      - source: self.Error
+        style: secondary
+        start: 0
+        end: 10
+  "try { run(); } catch (Error) { throw Error; }":
+    labels:
+      - source: Error
+        style: primary
+        start: 22
+        end: 27
+      - source: catch (Error) { throw Error; }
+        style: secondary
+        start: 15
+        end: 45
+  window.Promise = Fake;:
+    labels:
+      - source: window.Promise = Fake
+        style: primary
+        start: 0
+        end: 21
+      - source: Promise
+        style: secondary
+        start: 7
+        end: 14
+      - source: window.Promise
+        style: secondary
+        start: 0
+        end: 14
+  x.Error = Fake;:
+    labels:
+      - source: x.Error = Fake
+        style: primary
+        start: 0
+        end: 14
+      - source: Error
+        style: secondary
+        start: 2
+        end: 7
+      - source: x.Error
+        style: secondary
+        start: 0
+        end: 7

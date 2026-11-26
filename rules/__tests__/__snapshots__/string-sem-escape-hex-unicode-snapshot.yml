@@ -1,0 +1,63 @@
+id: string-sem-escape-hex-unicode
+snapshots:
+  const a = '..\/example-a/x';:
+    labels:
+      - source: \/
+        style: primary
+        start: 13
+        end: 15
+  "const a = '.\\\n./example-a/x';":
+    labels:
+      - source: |
+          \
+        style: primary
+        start: 12
+        end: 14
+  const a = '\x2e\x2e/example-a';:
+    labels:
+      - source: \x2e
+        style: primary
+        start: 11
+        end: 15
+  const a = 'a\0b';:
+    labels:
+      - source: \0
+        style: primary
+        start: 12
+        end: 14
+  const a = 'a\vb';:
+    labels:
+      - source: \v
+        style: primary
+        start: 12
+        end: 14
+  const a = 'use\u0045ffect';:
+    labels:
+      - source: \u0045
+        style: primary
+        start: 14
+        end: 20
+  "const a = 'use\\u{45}ffect';":
+    labels:
+      - source: \u{45}
+        style: primary
+        start: 14
+        end: 20
+  const a = 'use\x45ffect';:
+    labels:
+      - source: \x45
+        style: primary
+        start: 14
+        end: 18
+  const a = `use\x45ffect`;:
+    labels:
+      - source: \x45
+        style: primary
+        start: 14
+        end: 18
+  "import { a } from '\\x2e\\x2e/example-a/doubler.ts';":
+    labels:
+      - source: \x2e
+        style: primary
+        start: 19
+        end: 23

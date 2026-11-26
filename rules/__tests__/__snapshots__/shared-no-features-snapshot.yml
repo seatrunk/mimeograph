@@ -1,0 +1,80 @@
+id: shared-no-features
+snapshots:
+  const m = await import("#features/example-a");:
+    labels:
+      - source: '"#features/example-a"'
+        style: primary
+        start: 23
+        end: 44
+  "const m = await import('#features/example-a', {});":
+    labels:
+      - source: "'#features/example-a'"
+        style: primary
+        start: 23
+        end: 44
+  "const m = await import('../features/example-a', { with: {} });":
+    labels:
+      - source: "'../features/example-a'"
+        style: primary
+        start: 23
+        end: 46
+  const m = await import(`#features/example-a`);:
+    labels:
+      - source: "`#features/example-a`"
+        style: primary
+        start: 23
+        end: 44
+  const m = require("../features/example-a");:
+    labels:
+      - source: '"../features/example-a"'
+        style: primary
+        start: 18
+        end: 41
+  export * from "../features/example-a";:
+    labels:
+      - source: '"../features/example-a"'
+        style: primary
+        start: 14
+        end: 37
+  'export { a } from "#features/example-a";':
+    labels:
+      - source: '"#features/example-a"'
+        style: primary
+        start: 18
+        end: 39
+  'import type { A } from "#features/example-a";':
+    labels:
+      - source: '"#features/example-a"'
+        style: primary
+        start: 23
+        end: 44
+  import x = require('#features/example-a');:
+    labels:
+      - source: "'#features/example-a'"
+        style: primary
+        start: 19
+        end: 40
+  'import { a } from "#features/example-a";':
+    labels:
+      - source: '"#features/example-a"'
+        style: primary
+        start: 18
+        end: 39
+  'import { a } from "../../features/example-a";':
+    labels:
+      - source: '"../../features/example-a"'
+        style: primary
+        start: 18
+        end: 44
+  'import { a } from "../features/example-a/index.ts";':
+    labels:
+      - source: '"../features/example-a/index.ts"'
+        style: primary
+        start: 18
+        end: 50
+  'import { a } from "./features/example-a";':
+    labels:
+      - source: '"./features/example-a"'
+        style: primary
+        start: 18
+        end: 40

@@ -1,0 +1,21 @@
+id: shared-no-features
+valid:
+  - 'import { t } from "./text.ts";'
+  - 'import { fs } from "node:fs";'
+  - 'import { a } from "some-pkg/features/foo";'
+  - 'import { a } from "some-pkg/features/a/b";'
+  - 'import { t } from "#shared/text.ts";'
+invalid:
+  - 'import { a } from "#features/example-a";'
+  - 'import { a } from "../features/example-a/index.ts";'
+  - 'import { a } from "../../features/example-a";'
+  - 'import { a } from "./features/example-a";'
+  - 'import type { A } from "#features/example-a";'
+  - 'export { a } from "#features/example-a";'
+  - 'export * from "../features/example-a";'
+  - 'const m = await import("#features/example-a");'
+  - "const m = await import(`#features/example-a`);"
+  - 'const m = require("../features/example-a");'
+  - "const m = await import('#features/example-a', {});"
+  - "const m = await import('../features/example-a', { with: {} });"
+  - "import x = require('#features/example-a');"

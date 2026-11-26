@@ -1,0 +1,198 @@
+id: catch-propagacao-direta
+language: Tsx
+severity: error
+message: 'Dentro do catch, return e throw que citam o erro só valem quando levam o próprio erro. throw aceita `throw e` e `throw new Error("contexto", { cause: e })` (ou TypeError, RangeError, SyntaxError, ReferenceError, EvalError, URIError; AggregateError leva as opções no 3º argumento, sem spread nos argumentos). return aceita o mesmo, `return e`, `return Promise.reject(e)` e `return { ok: false, error: e }` (também com `as`/`satisfies`, ou com o erro dentro de `new Error(..., { cause: e })`). Chamada, template string, `e.message`, conversão, `new` de outra classe, objeto com spread ou chave computada, `throw { error: e }` e `{ cause: e }` fora das opções de um erro nativo não preservam o erro; `console.error(e)` devolve undefined.'
+files:
+  - src/**
+utils:
+  nested-function:
+    any:
+      - kind: arrow_function
+      - kind: function_expression
+      - kind: function_declaration
+      - kind: generator_function
+      - kind: generator_function_declaration
+      - kind: method_definition
+  err-ref:
+    kind: identifier
+    pattern: $ERR
+  err-mention:
+    any:
+      - matches: err-ref
+      - kind: shorthand_property_identifier
+        pattern: $ERR
+  err-value:
+    any:
+      - matches: err-ref
+      - kind: as_expression
+        has:
+          any:
+            - matches: err-ref
+            - kind: as_expression
+              has:
+                matches: err-ref
+      - kind: satisfies_expression
+        has:
+          matches: err-ref
+  plain-object:
+    kind: object
+    not:
+      has:
+        any:
+          - kind: spread_element
+          - kind: pair
+            has:
+              field: key
+              kind: computed_property_name
+  cause-pair:
+    any:
+      - kind: shorthand_property_identifier
+        regex: "^cause$"
+        pattern: $ERR
+      - kind: pair
+        all:
+          - has:
+              field: key
+              kind: property_identifier
+              regex: "^cause$"
+          - has:
+              field: value
+              matches: err-value
+  options-with-cause:
+    any:
+      - matches: plain-object
+        has:
+          matches: cause-pair
+      - any:
+          - kind: as_expression
+          - kind: satisfies_expression
+        has:
+          matches: plain-object
+          has:
+            matches: cause-pair
+  native-error-name:
+    any:
+      - kind: identifier
+        regex: "^(Error|TypeError|RangeError|SyntaxError|ReferenceError|EvalError|URIError)$"
+      - kind: member_expression
+        all:
+          - has:
+              field: object
+              kind: identifier
+              regex: "^globalThis$"
+          - has:
+              field: property
+              kind: property_identifier
+              regex: "^(Error|TypeError|RangeError|SyntaxError|ReferenceError|EvalError|URIError)$"
+  aggregate-error-name:
+    any:
+      - kind: identifier
+        regex: "^AggregateError$"
+      - kind: member_expression
+        all:
+          - has:
+              field: object
+              kind: identifier
+              regex: "^globalThis$"
+          - has:
+              field: property
+              kind: property_identifier
+              regex: "^AggregateError$"
+  native-error-with-cause:
+    kind: new_expression
+    any:
+      - all:
+          - has:
+              field: constructor
+              matches: native-error-name
+          - has:
+              field: arguments
+              all:
+                - not:
+                    has:
+                      kind: spread_element
+                - has:
+                    nthChild: 2
+                    matches: options-with-cause
+      - all:
+          - has:
+              field: constructor
+              matches: aggregate-error-name
+          - has:
+              field: arguments
+              all:
+                - not:
+                    has:
+                      kind: spread_element
+                - has:
+                    nthChild: 3
+                    matches: options-with-cause
+  err-carrier:
+    any:
+      - matches: err-value
+      - matches: native-error-with-cause
+  carrier-object:
+    matches: plain-object
+    has:
+      any:
+        - kind: shorthand_property_identifier
+          pattern: $ERR
+        - kind: pair
+          has:
+            field: value
+            matches: err-carrier
+  return-carrier:
+    any:
+      - has:
+          matches: err-carrier
+      - has:
+          matches: carrier-object
+      - has:
+          any:
+            - kind: as_expression
+            - kind: satisfies_expression
+          has:
+            any:
+              - matches: carrier-object
+              - any:
+                  - kind: as_expression
+                  - kind: satisfies_expression
+                has:
+                  matches: carrier-object
+      - has:
+          pattern: Promise.reject($ERR)
+  throw-carrier:
+    has:
+      matches: err-carrier
+rule:
+  kind: catch_clause
+  all:
+    - has:
+        field: parameter
+        kind: identifier
+        pattern: $ERR
+    - any:
+        - has:
+            field: body
+            has:
+              kind: return_statement
+              stopBy:
+                matches: nested-function
+              all:
+                - has:
+                    matches: err-mention
+                    stopBy: end
+                - not:
+                    matches: return-carrier
+        - has:
+            field: body
+            has:
+              kind: throw_statement
+              stopBy:
+                matches: nested-function
+              all:
+                - has:
+                    matches: err-mention
+                    stopBy: end
+                - not:
+                    matches: throw-carrier

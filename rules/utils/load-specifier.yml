@@ -1,0 +1,29 @@
+id: load-specifier
+language: Tsx
+rule:
+  all:
+    - any:
+        - kind: string
+        - kind: template_string
+    - any:
+        - inside:
+            kind: import_statement
+            field: source
+        - inside:
+            kind: export_statement
+            field: source
+        - inside:
+            kind: import_require_clause
+            field: source
+        - all:
+            - nthChild: 1
+            - inside:
+                kind: arguments
+                inside:
+                  kind: call_expression
+                  has:
+                    field: function
+                    any:
+                      - kind: import
+                      - kind: identifier
+                        regex: "^require$"

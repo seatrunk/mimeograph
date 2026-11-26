@@ -1,0 +1,9 @@
+id: string-sem-escape-hex-unicode
+language: Tsx
+severity: error
+message: "Em string só são permitidos os escapes \\n, \\r, \\t, \\\\, \\' e \\\" (e a crase em template). Escape hexadecimal, unicode, \\/ ou continuação de linha é proibido: o Prettier o preserva e ele esconde o texto real de especificadores de import e de nomes como useEffect das regras de lint. Escreva os caracteres normais."
+files:
+  - src/**
+rule:
+  kind: escape_sequence
+  regex: '^\\[^nrt\\''"`$]'

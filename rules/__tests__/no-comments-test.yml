@@ -1,0 +1,25 @@
+id: no-comments
+valid:
+  - "export const a = 1;"
+  - "/// <reference types=\"node\" />\nexport const a = 1;"
+  - "/// <reference lib=\"es2022\" />\nexport const a = 1;"
+  - 'const s = "// nao e comentario";'
+  - "/// <reference types=\"vitest/globals\" />\nexport const a = 1;"
+  - "/// <reference types=\"@types/node\" />\nexport const a = 1;"
+  - "/// <reference lib=\"es2022.array\" />\nexport const a = 1;"
+invalid:
+  - "/// <reference types=\"../src/features/example-a/doubler\" />\nexport const a = 1;"
+  - "/// <reference types=\"a/../../b\" />\nexport const a = 1;"
+  - "// comentario\nexport const a = 1;"
+  - "export const a = 1; // inline"
+  - "/* bloco */\nexport const a = 1;"
+  - "/** doc */\nexport function f() {}"
+  - "/// <reference comentario disfarcado\nexport const a = 1;"
+  - "/// <reference types=\"node\" /> comentario extra\nexport const a = 1;"
+  - "/// <reference types=\"node\"\nexport const a = 1;"
+  - "/// <referencia types=\"node\" />\nexport const a = 1;"
+  - "/// <reference outro=\"x\" />\nexport const a = 1;"
+  - "#!/usr/bin/env node\nexport const a = 1;"
+  - "/// <reference path=\"./tipos.d.ts\" />\nexport const a = 1;"
+  - "/// <reference no-default-lib=\"true\" />\nexport const a = 1;"
+  - "/// <reference path=\"../example-a/doubler.ts\" />\nexport const a = 1;"

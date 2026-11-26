@@ -1,0 +1,41 @@
+id: import-especificador-literal
+language: Tsx
+severity: error
+message: "import() e require() só aceitam especificador como string literal entre aspas, sem template, concatenação ou variável, com qualquer número de argumentos, e require só pode ser chamado direto. createRequire, getBuiltinModule, mainModule, require por alias, module.require() e import.meta.resolve() (por ponto ou colchetes) ficam proibidos. As regras de fronteira só enxergam o texto do especificador; um valor calculado ou um caminho alternativo de carga as contorna."
+files:
+  - src/**
+rule:
+  any:
+    - all:
+        - kind: call_expression
+        - has:
+            field: function
+            any:
+              - kind: import
+              - kind: identifier
+                regex: "^require$"
+        - has:
+            field: arguments
+            has:
+              nthChild: 1
+              not:
+                kind: string
+    - any:
+        - kind: identifier
+        - kind: property_identifier
+        - kind: shorthand_property_identifier
+        - kind: shorthand_property_identifier_pattern
+      regex: "^(createRequire|getBuiltinModule|mainModule)$"
+    - kind: identifier
+      regex: "^require$"
+      not:
+        inside:
+          kind: call_expression
+    - pattern: module.require($$$)
+    - pattern: import.meta.resolve($$$)
+    - pattern: import.meta[$$$]
+    - kind: string_fragment
+      regex: "^(createRequire|getBuiltinModule|mainModule|require)$"
+      inside:
+        kind: subscript_expression
+        stopBy: end

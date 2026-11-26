@@ -1,0 +1,32 @@
+id: feature-public-api-only
+valid:
+  - 'import { a } from "#features/example-a";'
+  - 'import { t } from "#shared/text.ts";'
+  - 'import { a } from "./a.ts";'
+  - 'export { a } from "#features/example-a";'
+  - 'import { a } from "some-pkg/features/foo";'
+  - 'import { a } from "some-pkg/features/a/b";'
+  - "import { a } from '#shared/a..b.ts';"
+invalid:
+  - 'import { a } from "#features/example-a/doubler.ts";'
+  - 'import { a } from "./features/example-a/index.ts";'
+  - 'import { a } from "../features/example-a/index.ts";'
+  - 'import { a } from "../../features/example-a/doubler.ts";'
+  - 'import type { A } from "#features/example-a/doubler.ts";'
+  - 'import "#features/example-a/doubler.ts";'
+  - 'export { a } from "#features/example-a/doubler.ts";'
+  - 'export * from "#features/example-a/doubler.ts";'
+  - 'export * as ns from "#features/example-a/doubler.ts";'
+  - 'const m = await import("#features/example-a/doubler.ts");'
+  - "const m = await import(`#features/example-a/doubler.ts`);"
+  - 'const m = require("#features/example-a/doubler.ts");'
+  - 'type T = typeof import("#features/example-a/doubler.ts");'
+  - "const m = await import('#features/example-a/doubler.ts', {});"
+  - "const m = await import('./features/example-a/doubler.ts', {});"
+  - "import x = require('#features/example-a/doubler.ts');"
+  - "import '#shared/../features/example-a/doubler.ts';"
+  - "import { a } from '#features/../features/example-a/doubler.ts';"
+  - "const m = await import('#shared/../features/example-a/doubler.ts', {});"
+  - "import { a } from './features//example-a/doubler.ts';"
+  - "import { a } from '#features//example-a/doubler.ts';"
+  - "import { a } from './x//features/example-a/doubler.ts';"

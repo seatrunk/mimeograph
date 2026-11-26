@@ -1,0 +1,20 @@
+id: no-use-effect
+language: Tsx
+severity: error
+message: "useEffect, useLayoutEffect e useInsertionEffect só são permitidos em src/shared/effects/**, inclusive importar, renomear, desestruturar ou acessar por colchetes. Mova o efeito para lá e exponha um hook específico, ou derive o valor durante a renderização."
+files:
+  - src/**
+ignores:
+  - src/shared/effects/**
+rule:
+  any:
+    - kind: identifier
+      regex: "^use(Layout|Insertion)?Effect$"
+    - kind: property_identifier
+      regex: "^use(Layout|Insertion)?Effect$"
+    - kind: shorthand_property_identifier
+      regex: "^use(Layout|Insertion)?Effect$"
+    - kind: shorthand_property_identifier_pattern
+      regex: "^use(Layout|Insertion)?Effect$"
+    - kind: string_fragment
+      regex: "^use(Layout|Insertion)?Effect$"

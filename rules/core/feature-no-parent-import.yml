@@ -1,0 +1,13 @@
+id: feature-no-parent-import
+language: Tsx
+severity: error
+message: "Dentro de uma feature, import relativo só com `./` e sem segmento `..` em nenhuma posição. Para outra feature use `#features/<nome>`; para código comum use `#shared/<arquivo>`."
+files:
+  - src/features/**
+rule:
+  all:
+    - any:
+        - kind: string
+        - kind: template_string
+    - matches: load-specifier
+    - regex: '(^["''`]|/)\.\.(/|["''`])'

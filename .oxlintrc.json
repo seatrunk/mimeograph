@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "import"],
+  "categories": { "correctness": "error" },
+  "rules": {
+    "typescript/no-explicit-any": "error",
+    "no-empty": "error",
+    "eqeqeq": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "no-debugger": "error",
+    "no-eval": "error",
+    "no-shadow": "error",
+    "no-redeclare": "error",
+    "no-new-func": "error",
+    "no-implied-eval": "error",
+    "no-extend-native": "error",
+    "no-proto": "error",
+    "import/no-cycle": "error",
+    "import/no-self-import": "error"
+  },
+  "ignorePatterns": ["node_modules", "coverage"]
+}
