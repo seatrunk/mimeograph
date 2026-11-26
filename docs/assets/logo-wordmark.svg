@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 128" width="520" height="128" role="img" aria-label="mimeograph">
+  <circle cx="46" cy="46" r="34" fill="#5B2EBF"/>
+  <circle cx="46" cy="46" r="6" fill="#F4EFE3"/>
+  <rect x="40" y="44" width="72" height="72" rx="8" fill="#F4EFE3" stroke="#1C1530" stroke-width="4"/>
+  <path d="M57 105V75M57 81c0-8 5-12 11-12s11 4 11 12v24M79 81c0-8 5-12 11-12s11 4 11 12v24" fill="none" stroke="#A78BFA" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M54 102V72M54 78c0-8 5-12 11-12s11 4 11 12v24M76 78c0-8 5-12 11-12s11 4 11 12v24" fill="none" stroke="#5B2EBF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <g font-family="'IBM Plex Mono','JetBrains Mono','Courier New',monospace" font-weight="700" font-size="44">
+    <text x="135" y="91" fill="#A78BFA">mimeograph</text>
+    <text x="132" y="88" fill="#1C1530">mimeograph</text>
+  </g>
+  <text x="134" y="114" font-family="'IBM Plex Mono','JetBrains Mono','Courier New',monospace" font-size="13" fill="#5B2EBF" letter-spacing="1.5">COPY THE CAGE, NOT THE MISTAKES</text>
+</svg>
