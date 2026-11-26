@@ -76,11 +76,10 @@ Depois traga o molde para dentro dele. Use no lugar de `HEAD` a branch ou tag qu
 
 ```sh
 git -C "$TARGET" fetch --depth 1 https://github.com/seatrunk/mimeograph.git HEAD
-git -C "$TARGET" checkout FETCH_HEAD -- .
-git -C "$TARGET" read-tree --empty
+git -C "$TARGET" archive FETCH_HEAD | tar -x -C "$TARGET"
 ```
 
-O último comando deixa o índice vazio: nada fica em stage e nada é commitado; os arquivos aparecem como não rastreados. Não há diretório temporário e nada para apagar. Não adicione remote e não faça commit; isso fica com a pessoa.
+O `git archive` desempacota no diretório os arquivos do commit baixado sem mexer no índice: nada fica em stage e nada é commitado; os arquivos aparecem como não rastreados. Não há diretório temporário e nada para apagar. Não adicione remote e não faça commit; isso fica com a pessoa.
 
 Se o `git fetch` falhar porque o repositório é privado ou você não tem acesso, pare e avise a pessoa. Não peça tokens (regra dura 3).
 

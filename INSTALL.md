@@ -76,11 +76,10 @@ Then fetch the template into it. Use the branch or tag the human names in place 
 
 ```sh
 git -C "$TARGET" fetch --depth 1 https://github.com/seatrunk/mimeograph.git HEAD
-git -C "$TARGET" checkout FETCH_HEAD -- .
-git -C "$TARGET" read-tree --empty
+git -C "$TARGET" archive FETCH_HEAD | tar -x -C "$TARGET"
 ```
 
-The last command leaves the index empty, so nothing is staged and nothing is committed; the files show up as untracked. There is no temporary directory and nothing to delete. Do not add a remote and do not commit; that is for the human.
+`git archive` unpacks the files of the fetched commit into the directory without touching the index, so nothing is staged and nothing is committed; the files show up as untracked. There is no temporary directory and nothing to delete. Do not add a remote and do not commit; that is for the human.
 
 If `git fetch` fails because the repository is private or you have no access, stop and tell the human. Do not ask for tokens (hard rule 3).
 
