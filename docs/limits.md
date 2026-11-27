@@ -27,4 +27,11 @@ AGENTS.md also says: no weakened tests, no merge or push to `main`, no secrets i
 
 ## Existing repositories
 
-The template is meant to be copied into a new project. Adding the cage to an existing repository is not supported yet; see [issue #2](https://github.com/seatrunk/mimeograph/issues/2).
+Adoption mode ([design](./adoption.md), procedure in INSTALL.md path B) adds the ast-grep cage to an existing repository. What it does not do:
+
+- It baselines only the ast-grep rules. The template's Prettier, Oxlint, `tsconfig.json`, knip and Vitest probes are not imposed on the existing repository, and nothing baselines them.
+- "Changed" means different from the base, so touching one line of a legacy file makes the whole file strict. That is the intended price of the ratchet, not a heuristic that can be tuned.
+- The baseline cannot grow, including when a rule is added or tightened and starts matching untouched files. Such a change needs a human decision outside the gate: the gate will fail with GROWTH or NEW until the matches are fixed or the rule is relaxed in review.
+- Like the rules themselves, the baseline is only as strong as review of `rules/`, `sgconfig.yml`, `tools/adoption/`, `adoption/baseline.json` and the CI workflow. A change that edits those files and the code together is judged by the edited versions. Protect them with branch protection and `CODEOWNERS`.
+- The base must be resolvable. A shallow clone fails loudly; it does not fall back to a weaker check. Direct commits to the base branch are not judged strictly, because `HEAD` is the base; branch protection is what prevents them.
+- The tool needs Node 24 or newer, and `pnpm`.

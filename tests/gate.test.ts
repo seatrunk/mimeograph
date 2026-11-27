@@ -25,6 +25,7 @@ const copied = [
   "tsconfig.json",
   "rules",
   "src",
+  "tools",
 ];
 
 interface Step {

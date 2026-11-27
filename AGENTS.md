@@ -5,6 +5,10 @@
 - `pnpm check`: gate completo (format, oxlint, ast-grep scan e test, typecheck, knip, test). Falha no primeiro erro.
 - `pnpm format`: aplica o Prettier. `pnpm test`: Vitest. `pnpm typecheck`: `tsc --noEmit`.
 
+## Modo adoção
+
+Com `adoption/baseline.json`, `pnpm ast` aceita só as violações antigas já registradas em arquivos que você não tocou. Arquivo novo ou alterado é estrito. O baseline só encolhe: `pnpm adoption:update` depois de limpar um arquivo, nunca edite o JSON à mão. Detalhes em `docs/adoption.md`.
+
 ## Regras duras
 
 - Zero comentários em qualquer arquivo TS/JS do repositório. Única exceção: `/// <reference types="..." />` ou `lib="..."`, sem caminho relativo.
