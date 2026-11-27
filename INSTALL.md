@@ -115,18 +115,19 @@ The first prints `ok`; the second prints the resolved `$TARGET`.
 
 ## Step 5. Strip the template-only files
 
-These belong to Mimeograph itself, not to the new project. This step refuses to run when `TARGET` or `NAME` is not set, or when `$TARGET` is not the copied template, so that nothing is deleted in the wrong folder. The chain below stops at the first link that fails. If it does not print `step5-ok`, do not run anything else in this step, including the `README.md` replacement, and tell the human why.
+These belong to Mimeograph itself, not to the new project. This step refuses to run when `TARGET` or `NAME` is not set, when `$TARGET` is not the copied template, or when `$TARGET` already has commits, so that nothing is deleted in the wrong folder. The chain below stops at the first link that fails. If it does not print `step5-ok`, do not run anything else in this step, including the `README.md` replacement, and tell the human why.
 
 ```sh
 : "${TARGET:?TARGET is not set: do not run this step, ask the human}" "${NAME:?NAME is not set: do not run this step, ask the human}" \
   && test -f "$TARGET/sgconfig.yml" \
+  && if git -C "$TARGET" rev-parse --verify -q HEAD >/dev/null 2>&1; then echo "refused: $TARGET already has commits, so nothing was deleted: ask the human" >&2; false; fi \
   && cd "$TARGET" \
   && rm -f INSTALL.md docs/assets/logo-mark.svg docs/assets/logo-wordmark.svg \
   && if [ -d docs/assets ]; then rmdir docs/assets; fi \
   && echo step5-ok
 ```
 
-It must print `step5-ok`. Anything else means it refused and changed nothing: an error message names the missing variable, and no output at all means `$TARGET/sgconfig.yml` does not exist, so `$TARGET` is not the copied template.
+It must print `step5-ok`. Anything else means it refused and changed nothing: an error message names the missing variable, a `refused: ... already has commits` message means `$TARGET` has commits and the human must choose another directory, and no output at all means `$TARGET/sgconfig.yml` does not exist, so `$TARGET` is not the copied template.
 
 Keep `LICENSE`, `.github/`, `AGENTS.md`, `docs/features/`, `docs/limits.md` and the example features. Do not edit `.github/workflows/ci.yml` (hard rule 4).
 
@@ -150,16 +151,17 @@ The last command must print `# ` followed by the project name.
 
 ## Step 6. Rename the project
 
-This step refuses to run when `TARGET` or `NAME` is not set, or when `$TARGET` is not the copied template, so that no file is edited in the wrong folder. Run the guard first:
+This step refuses to run when `TARGET` or `NAME` is not set, when `$TARGET` is not the copied template, or when `$TARGET` already has commits, so that no file is edited in the wrong folder. Run the guard first:
 
 ```sh
 : "${TARGET:?TARGET is not set: do not run this step, ask the human}" "${NAME:?NAME is not set: do not run this step, ask the human}" \
   && test -f "$TARGET/sgconfig.yml" \
   && test -f "$TARGET/package.json" \
+  && if git -C "$TARGET" rev-parse --verify -q HEAD >/dev/null 2>&1; then echo "refused: $TARGET already has commits, so no file was edited: ask the human" >&2; false; fi \
   && echo guard-ok
 ```
 
-Edit only if it printed `guard-ok`. If it printed an error or nothing, make no edit and tell the human which variable is missing or that `$TARGET` is not the copied template.
+Edit only if it printed `guard-ok`. If it printed an error or nothing, make no edit and tell the human which variable is missing, that `$TARGET` is not the copied template, or that `$TARGET` already has commits (a `refused: ... already has commits` message).
 
 Then, using the full paths under `$TARGET`: in `$TARGET/package.json`, change the `"name"` field from `mimeograph` to `$NAME`. In `$TARGET/AGENTS.md`, change the first line from `# AGENTS.md (Mimeograph)` to `# AGENTS.md`. Edit only those two lines.
 
