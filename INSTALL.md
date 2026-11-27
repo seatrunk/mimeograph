@@ -17,7 +17,7 @@ A file you copied into the target during this run is not a "file that existed be
 
 Steps that change something have a **Skip if** (already done) and every step ends with a **Check**. If the check fails after you ran the step, stop and show the human the command and its output. Shell variables and the current directory do not survive between commands in some tools, so set the variables again and `cd` again in each command.
 
-Talk to the human in the human's language. The commands, file names and the report template below stay as written.
+Talk to the human in the human's language, including the final report in step 9: translate its labels too. Commands, file names, URLs and variable names stay as written.
 
 ## Step 1. Choose the path
 
@@ -54,15 +54,25 @@ Check the target:
 ```sh
 if [ ! -e "$TARGET" ] || [ -z "$(ls -A "$TARGET")" ]; then
   echo ok-empty
-elif [ "$(ls -A "$TARGET")" = ".git" ] && ! git -C "$TARGET" rev-parse --verify -q HEAD >/dev/null; then
-  echo ok-git-only
+elif [ "$(ls -A "$TARGET")" = ".git" ]; then
+  if [ -L "$TARGET/.git" ] || [ ! -d "$TARGET/.git" ]; then
+    echo dotgit-not-a-directory
+  elif [ -z "$(ls -A "$TARGET/.git")" ]; then
+    echo dotgit-empty
+  elif [ "$(git -C "$TARGET" rev-parse --show-toplevel 2>/dev/null)" = "$(cd "$TARGET" && pwd -P)" ] && ! git -C "$TARGET" rev-parse --verify -q HEAD >/dev/null; then
+    echo ok-git-only
+  else
+    echo not-empty
+  fi
 else
   echo not-empty
 fi
 ```
 
 - `ok-empty`: continue with step 4.
-- `ok-git-only`: a previous attempt ran `git init` and then failed before copying anything. Continue with step 4.
+- `ok-git-only`: `$TARGET` holds only a valid git repository with no commits, which is what a previous attempt leaves when `git init` worked and `git fetch` failed. Continue with step 4.
+- `dotgit-not-a-directory`: `.git` is a regular file or a symlink, as in a linked worktree or a submodule checkout that points at another repository. This is not a leftover of this guide. Stop, change nothing, tell the human what `.git` is, and ask for another directory.
+- `dotgit-empty`: `.git` is an empty directory. `git init` never leaves that, so it is not a leftover of this guide. Stop, change nothing, tell the human, and ask whether to use another directory. Do not delete it yourself (hard rule 4).
 - `not-empty` and it already holds a previous run of this guide (`$TARGET/sgconfig.yml` exists and the command below prints `$NAME` or `mimeograph`): skip step 4 and continue with step 5.
 - `not-empty` otherwise: stop and ask the human for another directory. Do not copy over it.
 
@@ -105,17 +115,19 @@ The first prints `ok`; the second prints the resolved `$TARGET`.
 
 ## Step 5. Strip the template-only files
 
-These belong to Mimeograph itself, not to the new project. In `$TARGET`:
+These belong to Mimeograph itself, not to the new project. This step refuses to run when `TARGET` or `NAME` is not set, or when `$TARGET` is not the copied template, so that nothing is deleted in the wrong folder. The chain below stops at the first link that fails; if it prints an error, do not run anything else in this step and tell the human which variable is missing.
 
 ```sh
-cd "$TARGET"
-rm -f INSTALL.md docs/assets/logo-mark.svg docs/assets/logo-wordmark.svg
-if [ -d docs/assets ]; then rmdir docs/assets; fi
+: "${TARGET:?TARGET is not set: do not run this step, ask the human}" "${NAME:?NAME is not set: do not run this step, ask the human}" \
+  && test -f "$TARGET/sgconfig.yml" \
+  && cd "$TARGET" \
+  && rm -f INSTALL.md docs/assets/logo-mark.svg docs/assets/logo-wordmark.svg \
+  && if [ -d docs/assets ]; then rmdir docs/assets; fi
 ```
 
-Keep `LICENSE`, `.github/`, `AGENTS.md`, `docs/features/`, `docs/limits.md` and the example features. Do not edit `.github/workflows/ci.yml` (hard rule 4).
+If it prints nothing, it worked. Keep `LICENSE`, `.github/`, `AGENTS.md`, `docs/features/`, `docs/limits.md` and the example features. Do not edit `.github/workflows/ci.yml` (hard rule 4).
 
-Then replace `README.md` with this text (use `$NAME`):
+Then replace `$TARGET/README.md` with this text (use `$NAME`):
 
 ```md
 # <name>
@@ -128,24 +140,32 @@ Built on the Mimeograph cage. Run `pnpm check` before every commit; CI runs the 
 Check:
 
 ```sh
-cd "$TARGET"
-test ! -e INSTALL.md && test ! -d docs/assets && head -1 README.md
+cd "${TARGET:?TARGET is not set}" && test ! -e INSTALL.md && test ! -d docs/assets && head -1 README.md
 ```
 
 The last command must print `# ` followed by the project name.
 
 ## Step 6. Rename the project
 
-In `package.json`, change the `"name"` field from `mimeograph` to `$NAME`. In `AGENTS.md`, change the first line from `# AGENTS.md (Mimeograph)` to `# AGENTS.md`. Edit only those two lines.
+This step refuses to run when `TARGET` or `NAME` is not set, or when `$TARGET` is not the copied template, so that no file is edited in the wrong folder. Run the guard first:
+
+```sh
+: "${TARGET:?TARGET is not set: do not run this step, ask the human}" "${NAME:?NAME is not set: do not run this step, ask the human}" \
+  && test -f "$TARGET/sgconfig.yml" \
+  && test -f "$TARGET/package.json" \
+  && echo guard-ok
+```
+
+Edit only if it printed `guard-ok`. If it printed an error or nothing, make no edit and tell the human which variable is missing or that `$TARGET` is not the copied template.
+
+Then, using the full paths under `$TARGET`: in `$TARGET/package.json`, change the `"name"` field from `mimeograph` to `$NAME`. In `$TARGET/AGENTS.md`, change the first line from `# AGENTS.md (Mimeograph)` to `# AGENTS.md`. Edit only those two lines.
 
 **Skip if** already done.
 
 Check:
 
 ```sh
-cd "$TARGET"
-node -p "require('./package.json').name"
-head -1 AGENTS.md
+cd "${TARGET:?TARGET is not set}" && node -p "require('./package.json').name" && head -1 AGENTS.md
 ```
 
 The first prints `$NAME`; the second prints `# AGENTS.md`.
@@ -177,7 +197,7 @@ If it fails:
 
 ## Step 9. Report to the human
 
-Send a short message, in the human's language, with these lines filled in:
+Send a short message, in the human's language, with these lines filled in. Translate the labels (`project name`, `pnpm check`, `git`, `CI`, `license`, `examples`, `needs you`) and the sentences, not the commands, file names, URLs or variable names:
 
 ```text
 Mimeograph installed in <TARGET>.
