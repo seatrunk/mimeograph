@@ -115,17 +115,20 @@ The first prints `ok`; the second prints the resolved `$TARGET`.
 
 ## Step 5. Strip the template-only files
 
-These belong to Mimeograph itself, not to the new project. This step refuses to run when `TARGET` or `NAME` is not set, or when `$TARGET` is not the copied template, so that nothing is deleted in the wrong folder. The chain below stops at the first link that fails; if it prints an error, do not run anything else in this step and tell the human which variable is missing.
+These belong to Mimeograph itself, not to the new project. This step refuses to run when `TARGET` or `NAME` is not set, or when `$TARGET` is not the copied template, so that nothing is deleted in the wrong folder. The chain below stops at the first link that fails. If it does not print `step5-ok`, do not run anything else in this step, including the `README.md` replacement, and tell the human why.
 
 ```sh
 : "${TARGET:?TARGET is not set: do not run this step, ask the human}" "${NAME:?NAME is not set: do not run this step, ask the human}" \
   && test -f "$TARGET/sgconfig.yml" \
   && cd "$TARGET" \
   && rm -f INSTALL.md docs/assets/logo-mark.svg docs/assets/logo-wordmark.svg \
-  && if [ -d docs/assets ]; then rmdir docs/assets; fi
+  && if [ -d docs/assets ]; then rmdir docs/assets; fi \
+  && echo step5-ok
 ```
 
-If it prints nothing, it worked. Keep `LICENSE`, `.github/`, `AGENTS.md`, `docs/features/`, `docs/limits.md` and the example features. Do not edit `.github/workflows/ci.yml` (hard rule 4).
+It must print `step5-ok`. Anything else means it refused and changed nothing: an error message names the missing variable, and no output at all means `$TARGET/sgconfig.yml` does not exist, so `$TARGET` is not the copied template.
+
+Keep `LICENSE`, `.github/`, `AGENTS.md`, `docs/features/`, `docs/limits.md` and the example features. Do not edit `.github/workflows/ci.yml` (hard rule 4).
 
 Then replace `$TARGET/README.md` with this text (use `$NAME`):
 
