@@ -1,7 +1,5 @@
 <p align="center"><img src="docs/assets/logo-wordmark.svg" alt="Mimeograph" width="520"></p>
 
-**English** · [Português](./README.pt-BR.md)
-
 > Copy the cage, not the mistakes.
 
 Mimeograph is a repository template: strict TypeScript on Node, no UI framework, and a mechanical cage that fails the build when a rule is broken. You copy the cage into a new project once, and every later change, human or coding agent, runs through the same gate.

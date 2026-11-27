@@ -1,7 +1,5 @@
 # Limits
 
-**English** · [Português](./limits.pt-BR.md)
-
 What the cage declaredly does not catch. Source: [AGENTS.md](../AGENTS.md), the messages in `rules/` and the bypass probes in `tests/gate.test.ts`.
 
 ## Rules are syntactic

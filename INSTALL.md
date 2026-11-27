@@ -1,7 +1,5 @@
 # INSTALL.md
 
-**English** · [Português](./INSTALL.pt-BR.md)
-
 This guide is written for a coding agent. A human told you: "go to the Mimeograph repository and follow INSTALL.md". Follow it literally, in order. Mimeograph source: `https://github.com/seatrunk/mimeograph.git`.
 
 ## Hard rules
@@ -11,13 +9,15 @@ These apply to every step. If a step would break one, stop and ask the human.
 1. No `curl | sh`, no piping a download into a shell, no running a script you have not read.
 2. No global installs (`npm -g`, `corepack enable`, `brew`, `apt`, version managers, and similar) without asking first.
 3. No secrets. Never ask for, read, print or write tokens, passwords or `.env` files. If git needs credentials you do not have, stop and tell the human.
-4. Ask the human before: overwriting or deleting any file that existed before you started; creating or changing anything under `.github/` or any CI setting or repository variable; running any `git push` or creating a remote repository.
+4. Ask the human before: overwriting or deleting any file that existed before you started; changing `.github/workflows/ci.yml` after step 4, adding other files under `.github/`, or touching any CI setting or repository variable; running any `git push` or creating a remote repository.
 5. Touch only the target directory. Nothing else.
 6. If a safety tool or hook blocks a command, do not reword or split it to get around the block. Tell the human and ask.
 
-A file you copied into the target during this run is not a "file that existed before you started". Anything already in the target before step 4 is.
+A file you copied into the target during this run is not a "file that existed before you started". Anything already in the target before step 4 is. Step 4 copies the template's `.github/workflows/ci.yml` unchanged; that copy is part of the template and needs no question.
 
-Every step has a **Skip if** (already done) and a **Check**. If the check fails after you ran the step, stop and show the human the command and its output. Shell variables do not survive between commands in some tools, so set them again in each command.
+Steps that change something have a **Skip if** (already done) and every step ends with a **Check**. If the check fails after you ran the step, stop and show the human the command and its output. Shell variables and the current directory do not survive between commands in some tools, so set the variables again and `cd` again in each command.
+
+Talk to the human in the human's language. The commands, file names and the report template below stay as written.
 
 ## Step 1. Choose the path
 
@@ -52,12 +52,23 @@ Ask the human for:
 Check the target:
 
 ```sh
-if [ ! -e "$TARGET" ] || [ -z "$(ls -A "$TARGET")" ]; then echo ok-empty; else echo not-empty; fi
+if [ ! -e "$TARGET" ] || [ -z "$(ls -A "$TARGET")" ]; then
+  echo ok-empty
+elif [ "$(ls -A "$TARGET")" = ".git" ] && ! git -C "$TARGET" rev-parse --verify -q HEAD >/dev/null; then
+  echo ok-git-only
+else
+  echo not-empty
+fi
 ```
 
 - `ok-empty`: continue with step 4.
-- `not-empty` and it already holds a previous run of this guide (`$TARGET/sgconfig.yml` exists and `node -p "require('$TARGET/package.json').name"` prints `$NAME` or `mimeograph`): skip step 4 and continue with step 5.
+- `ok-git-only`: a previous attempt ran `git init` and then failed before copying anything. Continue with step 4.
+- `not-empty` and it already holds a previous run of this guide (`$TARGET/sgconfig.yml` exists and the command below prints `$NAME` or `mimeograph`): skip step 4 and continue with step 5.
 - `not-empty` otherwise: stop and ask the human for another directory. Do not copy over it.
+
+```sh
+node -p "JSON.parse(require('node:fs').readFileSync(process.argv[1], 'utf8')).name" "$TARGET/package.json"
+```
 
 ## Step 4. Create the repository and copy the template
 
@@ -98,11 +109,11 @@ These belong to Mimeograph itself, not to the new project. In `$TARGET`:
 
 ```sh
 cd "$TARGET"
-rm -f README.pt-BR.md INSTALL.md INSTALL.pt-BR.md docs/assets/logo-mark.svg docs/assets/logo-wordmark.svg
+rm -f INSTALL.md docs/assets/logo-mark.svg docs/assets/logo-wordmark.svg
 if [ -d docs/assets ]; then rmdir docs/assets; fi
 ```
 
-Keep `LICENSE`, `.github/`, `AGENTS.md`, `docs/features/`, `docs/limits*.md` and the example features. Do not edit `.github/workflows/ci.yml` (hard rule 4).
+Keep `LICENSE`, `.github/`, `AGENTS.md`, `docs/features/`, `docs/limits.md` and the example features. Do not edit `.github/workflows/ci.yml` (hard rule 4).
 
 Then replace `README.md` with this text (use `$NAME`):
 
@@ -112,12 +123,13 @@ Then replace `README.md` with this text (use `$NAME`):
 Built on the Mimeograph cage. Run `pnpm check` before every commit; CI runs the same command. Rules for agents are in [AGENTS.md](./AGENTS.md).
 ```
 
-**Skip if** the first line of `README.md` is already `# $NAME`.
+**Skip replacing `README.md` if** its first line is already `# $NAME`.
 
 Check:
 
 ```sh
-test ! -e INSTALL.md && test ! -e README.pt-BR.md && test ! -d docs/assets && head -1 README.md
+cd "$TARGET"
+test ! -e INSTALL.md && test ! -d docs/assets && head -1 README.md
 ```
 
 The last command must print `# ` followed by the project name.
@@ -131,6 +143,7 @@ In `package.json`, change the `"name"` field from `mimeograph` to `$NAME`. In `A
 Check:
 
 ```sh
+cd "$TARGET"
 node -p "require('./package.json').name"
 head -1 AGENTS.md
 ```
@@ -164,7 +177,7 @@ If it fails:
 
 ## Step 9. Report to the human
 
-Send a short message with these lines filled in:
+Send a short message, in the human's language, with these lines filled in:
 
 ```text
 Mimeograph installed in <TARGET>.
