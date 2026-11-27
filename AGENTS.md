@@ -1,31 +1,31 @@
 # AGENTS.md (Mimeograph)
 
-## Comandos
+## Commands
 
-- `pnpm check`: gate completo (format, oxlint, ast-grep scan e test, typecheck, knip, test). Falha no primeiro erro.
-- `pnpm format`: aplica o Prettier. `pnpm test`: Vitest. `pnpm typecheck`: `tsc --noEmit`.
+- `pnpm check`: full gate (format, oxlint, ast-grep scan and test, typecheck, knip, test). Fails on the first error.
+- `pnpm format`: applies Prettier. `pnpm test`: Vitest. `pnpm typecheck`: `tsc --noEmit`.
 
-## Modo adoção
+## Adoption mode
 
-Com `adoption/baseline.json`, `pnpm ast` aceita só as violações antigas já registradas em arquivos que você não tocou. Arquivo novo ou alterado é estrito. O baseline só encolhe: `pnpm adoption:update` depois de limpar um arquivo, nunca edite o JSON à mão. Detalhes em `docs/adoption.md`.
+With `adoption/baseline.json`, `pnpm ast` accepts only the old violations already recorded in files you have not touched. A new or changed file is strict. The baseline only shrinks: run `pnpm adoption:update` after cleaning up a file, never edit the JSON by hand. Details in `docs/adoption.md`.
 
-## Regras duras
+## Hard rules
 
-- Zero comentários em qualquer arquivo TS/JS do repositório. Única exceção: `/// <reference types="..." />` ou `lib="..."`, sem caminho relativo.
-- Sem `any`. Sem `catch` vazio ou que engole o erro. `useEffect` só em `src/shared/effects/**`.
-- Sem teste enfraquecido (não apague nem relaxe assert para passar).
-- Sem merge e sem push na `main`. Sem segredo no repo.
+- Zero comments in any TS/JS file in the repository. Only exception: `/// <reference types="..." />` or `lib="..."`, without a relative path.
+- No `any`. No empty `catch` or one that swallows the error. `useEffect` only in `src/shared/effects/**`.
+- No weakened tests (do not delete or relax an assert to make it pass).
+- No merge and no push to `main`. No secrets in the repo.
 
-## Fronteiras de feature
+## Feature boundaries
 
-- `src/features/<nome>/index.ts` é a única porta pública da feature.
-- Outra feature só por `#features/<nome>`; código comum por `#shared/<arquivo>`.
-- Dentro da feature, import relativo só com `./`. `src/shared` não importa feature.
+- `src/features/<name>/index.ts` is the only public entry point of a feature.
+- Another feature only via `#features/<name>`; common code via `#shared/<file>`.
+- Inside a feature, relative imports only with `./`. `src/shared` does not import from features.
 
-## Regra do 2º erro
+## Second-error rule
 
-Erro apontado 2x em revisão vira regra em `rules/segundo-erro/`, com teste em `rules/__tests__/` e `message` dizendo o caminho certo.
+An error flagged 2x in review becomes a rule in `rules/segundo-erro/`, with a test in `rules/__tests__/` and a `message` saying the right way.
 
 ## Feature Map
 
-Toda tela ou fluxo tem um `.md` em `docs/features/` (formato em `docs/features/README.md`). Leia antes de mexer; atualize junto com a mudança.
+Every screen or flow has a `.md` in `docs/features/` (format in `docs/features/README.md`). Read it before changing anything; update it together with the change.
