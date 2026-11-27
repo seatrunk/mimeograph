@@ -15,13 +15,13 @@ User `local-user` with role `viewer`. In the local environment, sign in with `LO
 | Element       | Selector                       |
 | ------------- | ------------------------------ |
 | Number field  | `data-testid="example-input"`  |
-| Double button | `role=button[name="Dobrar"]`   |
+| Double button | `role=button[name="Double"]`   |
 | Result        | `data-testid="example-result"` |
 
 ## How to validate headless
 
 1. `pnpm dev` (when the project has a server) and open `/example` with the login above.
-2. Fill `example-input` with `3` and trigger the Dobrar button.
+2. Fill `example-input` with `3` and trigger the Double button.
 3. `example-result` must contain `resultado double=6`.
 
 In the template without UI, the equivalent is `pnpm test`, which exercises `describeDouble(3)`.
