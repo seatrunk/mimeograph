@@ -1,10 +1,10 @@
-# Regra do 2º erro
+# Second-error rule
 
-Erro apontado 2x em revisão vira regra aqui.
+An error flagged 2x in review becomes a rule here.
 
-Cada regra nova traz:
+Each new rule comes with:
 
-- um arquivo `.yml` nesta pasta, com `message` dizendo o caminho certo;
-- um caso válido e um inválido em `rules/__tests__/`.
+- a `.yml` file in this folder, with a `message` saying the right way;
+- a valid and an invalid case in `rules/__tests__/`.
 
-O `sgconfig.yml` já lê esta pasta.
+The `sgconfig.yml` already reads this folder.

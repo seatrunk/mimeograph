@@ -1,27 +1,27 @@
 # example-flow
 
-Exemplo fictício do formato. Substitua ao criar a primeira tela real.
+Fictional example of the format. Replace it when you create the first real screen.
 
-## Rota
+## Route
 
-`/example`, fluxo que mostra o dobro de um número digitado (feature `example-b`, que usa `example-a`).
+`/example`, a flow that shows the double of a typed number (feature `example-b`, which uses `example-a`).
 
-## Pré-condição de login local
+## Local login precondition
 
-Usuário `local-user` com papel `viewer`. Em ambiente local, entre com `LOCAL_USER_EMAIL` e `LOCAL_USER_PASSWORD` do `.env` (nunca commitado).
+User `local-user` with role `viewer`. In the local environment, sign in with `LOCAL_USER_EMAIL` and `LOCAL_USER_PASSWORD` from `.env` (never committed).
 
-## Seletores
+## Selectors
 
-| Elemento     | Seletor                        |
-| ------------ | ------------------------------ |
-| Campo número | `data-testid="example-input"`  |
-| Botão dobrar | `role=button[name="Dobrar"]`   |
-| Resultado    | `data-testid="example-result"` |
+| Element       | Selector                       |
+| ------------- | ------------------------------ |
+| Number field  | `data-testid="example-input"`  |
+| Double button | `role=button[name="Dobrar"]`   |
+| Result        | `data-testid="example-result"` |
 
-## Como validar headless
+## How to validate headless
 
-1. `pnpm dev` (quando o projeto tiver servidor) e abrir `/example` com o login acima.
-2. Preencher `example-input` com `3` e acionar o botão Dobrar.
-3. `example-result` deve conter `resultado double=6`.
+1. `pnpm dev` (when the project has a server) and open `/example` with the login above.
+2. Fill `example-input` with `3` and trigger the Dobrar button.
+3. `example-result` must contain `resultado double=6`.
 
-No molde sem UI, o equivalente é `pnpm test`, que exercita `describeDouble(3)`.
+In the template without UI, the equivalent is `pnpm test`, which exercises `describeDouble(3)`.
