@@ -34,6 +34,10 @@ pnpm check
 
 Delete `src/features/example-a`, `src/features/example-b` and `docs/features/example-flow.md` when you have your first real feature. Run `pnpm check` before every commit; CI runs the same command.
 
+## Existing repositories
+
+Adoption mode puts the ast-grep rules on a repository that already has code: new and changed files are held to the full rules, the violations already there are recorded in a committed `adoption/baseline.json`, and that baseline can only shrink. Tell the agent the same sentence and pick path B in [INSTALL.md](./INSTALL.md). The design is in [docs/adoption.md](./docs/adoption.md).
+
 ## CI runner
 
 `.github/workflows/ci.yml` uses:

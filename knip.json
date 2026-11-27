@@ -3,6 +3,7 @@
   "entry": ["src/main.ts"],
   "project": [
     "src/**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}",
-    "tests/**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}"
+    "tests/**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}",
+    "tools/**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs}"
   ]
 }
