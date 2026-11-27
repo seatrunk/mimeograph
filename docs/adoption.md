@@ -29,6 +29,7 @@ Deleting the baseline returns the repository to strict mode, which is never weak
 
 - One entry per file and rule id, with the number of violations the scan reports today. Counts, not line numbers, so the baseline does not break when unrelated code moves. A baselined file is by definition untouched, so its count is exact.
 - Keys are sorted and the file is written with two-space JSON, so it is stable under Prettier and diffs show only real changes.
+- Only diagnostics with severity `error` are counted, which is what makes plain `ast-grep scan` fail. A rule you add with `severity: warning` or lower never blocks, in strict mode or in adoption mode.
 - Every count is a positive integer; an unknown key, version or shape is an error, not a pass.
 
 Commands:
@@ -42,7 +43,7 @@ Commands:
 A file is **changed** when it differs from the base, or is not tracked yet:
 
 - the base is the merge-base of `HEAD` and the branch you merge into: `ADOPTION_BASE` if set, else `origin/$GITHUB_BASE_REF` in a CI pull request, else the first that exists of `origin/HEAD`, `origin/main`, `origin/master`, `main`, `master`;
-- changed files are `git diff --name-only --no-renames --diff-filter=d <merge-base>` (committed, staged and unstaged work, against the base) plus the untracked files that are not ignored;
+- changed files are `git diff --name-only --no-renames --diff-filter=d <merge-base>` (the working tree against the base: committed and unstaged work), the same with `--cached` (the index against the base, so a staged change counts even when the working tree was reverted, because a commit would take the index), plus the untracked files that are not ignored;
 - a rename is a new path, so a renamed file is changed; the old path is deleted;
 - if `HEAD` is the base itself, only the uncommitted work counts;
 - if the base cannot be resolved (for example a shallow clone), the scan fails with a message; it never guesses.

@@ -17,7 +17,13 @@ import {
   type Counts,
 } from "./baseline.mts";
 import { evaluate, type Problem } from "./evaluate.mts";
-import { changedFiles, readAt, resolveBase, topLevel } from "./git.mts";
+import {
+  changedFiles,
+  readAt,
+  resolveBase,
+  topLevel,
+  tryTopLevel,
+} from "./git.mts";
 
 const usage = "usage: cli.mts scan | init | update";
 
@@ -51,6 +57,14 @@ function loadBaseline(root: string): Counts {
 function scan(env: Record<string, string | undefined>): number {
   const cwd = realpathSync(process.cwd());
   if (!existsSync(join(cwd, baselinePath))) {
+    const top = tryTopLevel(cwd);
+    if (
+      top !== null &&
+      realpathSync(top) !== cwd &&
+      existsSync(join(top, baselinePath))
+    ) {
+      throw new Error("run this from the root of the git repository");
+    }
     return scanPassthrough(cwd);
   }
   const root = requireRoot();

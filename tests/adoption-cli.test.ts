@@ -113,15 +113,19 @@ class Repo {
     return { ...env, ...extra };
   }
 
-  adoption(command: string, extra: Record<string, string> = {}): Outcome {
+  adoption(
+    command: string,
+    extra: Record<string, string> = {},
+    cwd: string = this.dir,
+  ): Outcome {
     const result = spawnSync(
       "node",
       [
         "--disable-warning=ExperimentalWarning",
-        "tools/adoption/cli.mts",
+        join(this.dir, "tools/adoption/cli.mts"),
         command,
       ],
-      { cwd: this.dir, encoding: "utf8", env: this.env(extra) },
+      { cwd, encoding: "utf8", env: this.env(extra) },
     );
     return {
       status: result.status ?? -1,
@@ -531,6 +535,118 @@ describe.concurrent("adoption cli", { timeout: 120_000 }, () => {
         expect(repo.adoption("update", { PATH: path }).status).toBe(2);
       }),
   );
+
+  test("scan from a subdirectory of an adopted repository is an error, not a pass", () =>
+    withRepo(legacy, (repo) => {
+      adopted(repo);
+      repo.write({
+        "src/legacy/b.ts": "// legacy comment\nexport const b = 3;\n",
+        "src/sub/ok.ts": "export const ok = 1;\n",
+      });
+      repo.commit("touch b");
+      expect(repo.adoption("scan").status).toBe(1);
+      const sub = repo.adoption("scan", {}, join(repo.dir, "src/sub"));
+      expect(sub.status).toBe(2);
+      expect(sub.text).toContain("root of the git repository");
+    }));
+
+  test("scan from a subdirectory of a repository without a baseline stays the plain scan", () =>
+    withRepo(legacy, (repo) => {
+      repo.write({ "src/sub/ok.ts": "export const ok = 1;\n" });
+      const sub = repo.adoption("scan", {}, join(repo.dir, "src/sub"));
+      expect(sub.status).toBe(0);
+    }));
+
+  test("a git failure while reading the baseline at the base is an error, not a skipped GROWTH", () =>
+    withRepo(legacy, (repo) => {
+      adopted(repo);
+      repo.write({
+        "src/legacy/b.ts": "// one\n// two\nexport const b = 1;\n",
+        [baselineFile]: repo
+          .read(baselineFile)
+          .replace('"no-comments": 1', '"no-comments": 2'),
+      });
+      repo.commit("hide");
+      const blob = repo.git("rev-parse", `main:${baselineFile}`).trim();
+      rmSync(join(repo.dir, ".git/objects", blob.slice(0, 2), blob.slice(2)));
+      const result = repo.adoption("scan");
+      expect(result.status).toBe(2);
+      expect(result.text).toContain("git show");
+    }));
+
+  const oddNames = [
+    "src/with space.ts",
+    'src/quo"te.ts',
+    "src/it's.ts",
+    "src/café-日本語.ts",
+    "src/-dash.ts",
+    "-root-dash.ts",
+  ];
+
+  test("files with spaces, quotes, unicode and a leading hyphen are judged, untracked and committed", () =>
+    withRepo(legacy, (repo) => {
+      adopted(repo);
+      repo.write(
+        Object.fromEntries(
+          oddNames.map((name) => [name, "// nope\nexport const n = 1;\n"]),
+        ),
+      );
+      const untracked = repo.adoption("scan");
+      expect(untracked.status).toBe(1);
+      repo.commit("odd names");
+      const committed = repo.adoption("scan");
+      expect(committed.status).toBe(1);
+      for (const name of oddNames) {
+        expect(untracked.text).toContain(`STRICT ${name}: no-comments x1`);
+        expect(committed.text).toContain(`STRICT ${name}: no-comments x1`);
+      }
+    }));
+
+  test("a change that is only staged counts even when the working tree was reverted", () =>
+    withRepo(legacy, (repo) => {
+      adopted(repo);
+      const original = repo.read("src/legacy/b.ts");
+      repo.write({ "src/legacy/b.ts": `${original}export const c = 2;\n` });
+      repo.git("add", "src/legacy/b.ts");
+      repo.write({ "src/legacy/b.ts": original });
+      const result = repo.adoption("scan");
+      expect(result.status).toBe(1);
+      expect(result.text).toContain("STRICT src/legacy/b.ts: no-comments x1");
+    }));
+
+  const warningRule = [
+    "id: warn-log",
+    "language: Tsx",
+    "severity: warning",
+    "message: logging",
+    "rule:",
+    "  pattern: console.log($A)",
+    "",
+  ].join("\n");
+
+  test("only error diagnostics count: a warning rule never blocks or enters the baseline", () =>
+    withRepo(
+      {
+        ...legacy,
+        "rules/core/warn-log.yml": warningRule,
+        "src/legacy/log.ts": "console.log(1);\n",
+      },
+      (repo) => {
+        const plain = spawnSync("ast-grep", ["scan", "src/legacy/log.ts"], {
+          cwd: repo.dir,
+          encoding: "utf8",
+          env: repo.env({}),
+        });
+        expect(plain.status).toBe(0);
+        expect(`${plain.stdout}${plain.stderr}`).toContain("warn-log");
+        adopted(repo);
+        expect(Object.keys(repo.baseline())).not.toContain("src/legacy/log.ts");
+        repo.write({ "src/new-log.ts": "console.log(2);\n" });
+        const result = repo.adoption("scan");
+        expect(result.status).toBe(0);
+        expect(result.text).toContain("adoption: ok");
+      },
+    ));
 
   test("an unknown command prints the usage", () =>
     withRepo(legacy, (repo) => {

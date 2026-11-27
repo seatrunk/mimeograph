@@ -276,10 +276,10 @@ Check:
 
 ```sh
 test -f "$TARGET/sgconfig.yml" && test -f "$TARGET/rules/core/no-comments.yml" && test -f "$TARGET/tools/adoption/cli.mts" && test -z "$(git -C "$TARGET" diff --cached --name-only)" && echo ok
-git -C "$TARGET" status --porcelain | grep -v -e '^?? sgconfig.yml$' -e '^?? rules/$' -e '^?? tools/$' -e '^?? tools/adoption/$'
+test -z "$(git -C "$TARGET" status --porcelain | grep -v -e '^?? sgconfig.yml$' -e '^?? rules/$' -e '^?? tools/$' -e '^?? tools/adoption/$')" && echo only-new-paths
 ```
 
-The first prints `ok`. The second prints nothing: the only changes are the new paths.
+The first prints `ok`. The second prints `only-new-paths` and exits 0: the only changes are the new paths. If it prints nothing, something else changed: stop and tell the human.
 
 ### Step B4. Add the dependency and the scripts
 
@@ -312,7 +312,7 @@ cd "$TARGET" && pnpm add -D "@ast-grep/cli@$RANGE"
 
 `FETCH_HEAD` is the one from step B3. If this is a re-run and `FETCH_HEAD` is gone, fetch it again as in step B3 and do not copy. Then edit `package.json` by hand to add the scripts, keeping its existing formatting and key order, and touching no other line.
 
-**Skip if** `ast-grep` is already in `devDependencies` and the four scripts exist with these values.
+**Skip if** `@ast-grep/cli` is already in `devDependencies`, the four scripts exist with these values, and `check` contains `pnpm ast && pnpm ast:test`. Skip only the parts that are already done.
 
 Check:
 
@@ -339,11 +339,11 @@ Check:
 cd "${TARGET:?TARGET is not set}" && pnpm ast && pnpm ast:test
 ```
 
-`pnpm ast` must print `adoption: ok` and exit 0, and `pnpm ast:test` must exit 0. If `pnpm ast` fails with a message that names `ADOPTION_BASE`, the default branch of this repository is not `main`, `master` or `origin/HEAD`: ask the human which branch the changes will merge into, run `ADOPTION_BASE=<that branch> pnpm ast` for this run only, and put the variable in your report (CI will need it too). For any other failure, stop and show the human the command and its output.
+`pnpm ast` must print `adoption: ok` and exit 0, and `pnpm ast:test` must exit 0. If `pnpm ast` fails with a message that names `ADOPTION_BASE`, the default branch of this repository is not `main`, `master` or `origin/HEAD`: ask the human which branch the changes will merge into, run `ADOPTION_BASE=<that branch> pnpm ast` for this run only, remember the branch the human gave you for steps B6 and B7, and put the variable in your report (CI will need it too). For any other failure, stop and show the human the command and its output.
 
 ### Step B6. Prove that the cage is on
 
-A new file with a comment must fail, and the repository's old violations must not.
+A new file with a comment must fail, and the repository's old violations must not. If step B5 needed `ADOPTION_BASE=<branch>`, put the same `ADOPTION_BASE=<branch>` in front of every `pnpm ast` below; without it the commands fail with exit 2 because the base is unknown. Use only the branch the human gave you in step B5.
 
 ```sh
 cd "${TARGET:?TARGET is not set}" && printf '// probe\nexport const probe = 1;\n' > mimeograph-probe.ts && pnpm ast; echo "exit=$?"
@@ -364,6 +364,8 @@ If the repository had a `check` script before step B4, it still runs the reposit
 ```sh
 cd "${TARGET:?TARGET is not set}" && pnpm check
 ```
+
+If step B5 needed `ADOPTION_BASE=<branch>`, run it as `ADOPTION_BASE=<branch> pnpm check`, with the branch the human gave you in step B5.
 
 If it fails, say whether the failing step is one of the repository's own (it was probably failing before) or complains about the files you copied (`rules/`, `tools/adoption/`, `sgconfig.yml`): in the second case the repository's formatter or type checker is picking them up, and the human decides how to exclude them. Do not edit the repository's tool configuration.
 

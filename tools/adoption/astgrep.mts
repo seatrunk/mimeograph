@@ -3,7 +3,7 @@ import { add, type Counts } from "./baseline.mts";
 
 function isViolation(
   value: unknown,
-): value is { file: string; ruleId: string } {
+): value is { file: string; ruleId: string; severity?: unknown } {
   return (
     typeof value === "object" &&
     value !== null &&
@@ -24,7 +24,9 @@ function parseStream(output: string): Counts {
     if (!isViolation(entry)) {
       throw new Error(`unexpected ast-grep output: ${line.slice(0, 200)}`);
     }
-    add(counts, entry.file, entry.ruleId);
+    if (entry.severity === undefined || entry.severity === "error") {
+      add(counts, entry.file, entry.ruleId);
+    }
   }
   return counts;
 }

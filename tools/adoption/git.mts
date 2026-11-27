@@ -55,6 +55,19 @@ export function topLevel(cwd: string): string {
   return git(cwd, ["rev-parse", "--show-toplevel"]).trim();
 }
 
+export function tryTopLevel(cwd: string): string | null {
+  const result = run(cwd, ["rev-parse", "--show-toplevel"]);
+  if (result.status === 0) {
+    return result.stdout.trim();
+  }
+  if (result.stderr.includes("not a git repository")) {
+    return null;
+  }
+  throw new Error(
+    `git rev-parse --show-toplevel failed: ${result.stderr.trim()}`,
+  );
+}
+
 export function resolveBase(
   cwd: string,
   env: Record<string, string | undefined>,
@@ -99,27 +112,34 @@ export function resolveBase(
 }
 
 export function changedFiles(cwd: string, base: string): Set<string> {
-  const tracked = git(cwd, [
-    "diff",
-    "--name-only",
-    "--no-renames",
-    "--diff-filter=d",
-    "-z",
-    base,
-  ]);
+  const diff = (...extra: string[]): string[] =>
+    names(
+      git(cwd, [
+        "diff",
+        ...extra,
+        "--name-only",
+        "--no-renames",
+        "--diff-filter=d",
+        "-z",
+        base,
+      ]),
+    );
   const untracked = git(cwd, [
     "ls-files",
     "--others",
     "--exclude-standard",
     "-z",
   ]);
-  return new Set([...names(tracked), ...names(untracked)]);
+  return new Set([...diff(), ...diff("--cached"), ...names(untracked)]);
 }
 
 export function readAt(cwd: string, base: string, path: string): string | null {
   if (base === emptyTree) {
     return null;
   }
-  const result = run(cwd, ["show", `${base}:${path}`]);
-  return result.status === 0 ? result.stdout : null;
+  const listing = git(cwd, ["ls-tree", "--name-only", base, "--", path]);
+  if (listing.trim() === "") {
+    return null;
+  }
+  return git(cwd, ["show", `${base}:${path}`]);
 }
