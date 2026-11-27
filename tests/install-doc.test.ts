@@ -1,6 +1,7 @@
 import { spawnSync } from "node:child_process";
 import {
   cpSync,
+  existsSync,
   mkdirSync,
   mkdtempSync,
   readFileSync,
@@ -14,13 +15,13 @@ import { describe, expect, test } from "vitest";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 
-function section(title: string): string {
+function section(title: string, hashes = "###"): string {
   const text = readFileSync(join(root, "INSTALL.md"), "utf8");
-  const start = text.indexOf(`### ${title}`);
+  const start = text.indexOf(`\n${hashes} ${title}`);
   if (start === -1) {
     throw new Error(`INSTALL.md has no section ${title}`);
   }
-  const rest = text.slice(start + 4);
+  const rest = text.slice(start + 1 + hashes.length + 1);
   const end = rest.search(/\n##+ /);
   return end === -1 ? rest : rest.slice(0, end);
 }
@@ -43,7 +44,7 @@ function blockAfter(body: string, marker: string): string {
   return block;
 }
 
-function repoWith(files: Record<string, string>): string {
+function repoWith(files: Record<string, string>, commit = true): string {
   const dir = mkdtempSync(join(tmpdir(), "install-doc-"));
   const git = (...args: string[]): void => {
     const result = spawnSync("git", args, { cwd: dir, encoding: "utf8" });
@@ -59,21 +60,27 @@ function repoWith(files: Record<string, string>): string {
   git("config", "user.email", "test@example.com");
   git("config", "user.name", "test");
   git("config", "commit.gpgsign", "false");
-  git("add", "-A");
-  git("commit", "-q", "-m", "base");
+  if (commit) {
+    git("add", "-A");
+    git("commit", "-q", "-m", "base");
+  }
   return dir;
 }
 
 function runBlock(
   block: string,
   target: string,
-): { status: number; out: string } {
+): { status: number; out: string; err: string } {
   const result = spawnSync("sh", ["-c", block], {
     cwd: tmpdir(),
     encoding: "utf8",
-    env: { ...process.env, TARGET: target },
+    env: { ...process.env, TARGET: target, NAME: "demo-app" },
   });
-  return { status: result.status ?? -1, out: result.stdout };
+  return {
+    status: result.status ?? -1,
+    out: result.stdout,
+    err: result.stderr,
+  };
 }
 
 describe("INSTALL.md path B", () => {
@@ -155,5 +162,79 @@ describe("INSTALL.md path B", () => {
     expect(section("Step B5.")).toContain("remember the branch");
     expect(section("Step B6.")).toContain("ADOPTION_BASE=<branch>");
     expect(section("Step B7.")).toContain("ADOPTION_BASE=<branch> pnpm check");
+  });
+});
+
+describe("INSTALL.md steps 5 and 6 refuse a target that has commits", () => {
+  const templateFiles: Record<string, string> = {
+    "sgconfig.yml": "ruleDirs: []\n",
+    "package.json": '{ "name": "mimeograph" }\n',
+    "AGENTS.md": "# AGENTS.md (Mimeograph)\n",
+    "README.md": "# Mimeograph\n",
+    "INSTALL.md": "# INSTALL.md\n",
+    "docs/assets/logo-mark.svg": "<svg/>\n",
+    "docs/assets/logo-wordmark.svg": "<svg/>\n",
+  };
+  const templateKept = [
+    "INSTALL.md",
+    "README.md",
+    "docs/assets/logo-mark.svg",
+    "docs/assets/logo-wordmark.svg",
+  ];
+  const step5 = (): string =>
+    blockAfter(section("Step 5.", "##"), "The chain below");
+  const step6 = (): string =>
+    blockAfter(section("Step 6.", "##"), "Run the guard first:");
+
+  test("step 5 refuses a target with a commit and deletes nothing", () => {
+    const dir = repoWith(templateFiles);
+    try {
+      const result = runBlock(step5(), dir);
+      expect(result.status).not.toBe(0);
+      expect(result.out).not.toContain("step5-ok");
+      expect(result.err).toContain("already has commits");
+      for (const path of templateKept) {
+        expect(existsSync(join(dir, path))).toBe(true);
+      }
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("step 5 still runs on a target with no commit", () => {
+    const dir = repoWith(templateFiles, false);
+    try {
+      const result = runBlock(step5(), dir);
+      expect(result.status).toBe(0);
+      expect(result.out).toBe("step5-ok\n");
+      expect(existsSync(join(dir, "INSTALL.md"))).toBe(false);
+      expect(existsSync(join(dir, "docs/assets"))).toBe(false);
+      expect(existsSync(join(dir, "README.md"))).toBe(true);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("step 6 refuses a target with a commit", () => {
+    const dir = repoWith(templateFiles);
+    try {
+      const result = runBlock(step6(), dir);
+      expect(result.status).not.toBe(0);
+      expect(result.out).not.toContain("guard-ok");
+      expect(result.err).toContain("already has commits");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("step 6 guard still passes on a target with no commit", () => {
+    const dir = repoWith(templateFiles, false);
+    try {
+      const result = runBlock(step6(), dir);
+      expect(result.status).toBe(0);
+      expect(result.out).toBe("guard-ok\n");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
