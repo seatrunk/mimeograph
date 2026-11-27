@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   check:
-    runs-on: [self-hosted, Linux, X64, chubas]
+    runs-on: ${{ fromJSON(vars.CI_RUNS_ON || '"ubuntu-latest"') }}
     timeout-minutes: 10
     env:
       PNPM_CONFIG_STORE_DIR: ${{ github.workspace }}/../.ci-state/pnpm-store

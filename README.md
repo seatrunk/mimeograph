@@ -1,26 +1,59 @@
-# template-dune
+<p align="center"><img src="docs/assets/logo-wordmark.svg" alt="Mimeograph" width="520"></p>
 
-Molde de repositório: TypeScript estrito e Node, sem framework de UI, com uma gaiola mecânica que falha o build quando uma regra é violada.
+> Copy the cage, not the mistakes.
 
-## Usar
+Mimeograph is a repository template: strict TypeScript on Node, no UI framework, and a mechanical cage that fails the build when a rule is broken. You copy the cage into a new project once, and every later change, human or coding agent, runs through the same gate.
 
-1. Crie o projeto a partir deste repositório e rode `pnpm install`.
-2. Apague `src/features/example-a`, `src/features/example-b` e `docs/features/example-flow.md` quando tiver a primeira feature real.
-3. Rode `pnpm check` antes de cada commit; o CI roda o mesmo comando.
+## What the cage blocks
 
-Requer Node >= 24 e pnpm (versão fixada em `packageManager`).
+`pnpm check` runs, in order, and stops at the first failure:
 
-## CI
+- **Prettier** (format only) and **Oxlint** (correctness, `no-explicit-any`, no shadowing, no import cycles).
+- **ast-grep rules** in `rules/`:
+  - any comment in TS/JS (except `/// <reference types|lib="..." />`);
+  - a `catch` that swallows the error instead of rethrowing or returning it;
+  - `useEffect` and friends outside `src/shared/effects/**`;
+  - feature boundaries: imports through `#features/<name>` only, no `..` inside a feature, `src/shared` never imports a feature;
+  - computed `import()` / `require()` specifiers, hex/unicode string escapes, and shadowing native error names, all of which hide text from the rules above.
+- **ast-grep rule tests**, `tsc --noEmit` (strict), **knip** (orphan exports, files and dependencies) and **Vitest**, which includes attack probes that try to bypass the rules.
 
-O CI roda em runner local, não no hospedado do GitHub: `.github/workflows/ci.yml` usa `runs-on: [self-hosted, Linux, X64, chubas]`, por decisão da org `seatrunk` (limite mensal de minutos do GitHub-hosted). Projetos criados a partir do molde registram o runner na chubas com `gh-runner-add <owner/repo>`. Quem usar o molde fora dessa máquina troca o `runs-on` do workflow por um runner próprio ou por `ubuntu-latest`. O job mantém todo o estado dentro de `_work` do runner (store do pnpm, caches e pnpm em `runner.temp`).
+The rules and the docs that explain them are in [AGENTS.md](./AGENTS.md) and [docs/features](./docs/features/README.md). Their messages are in Portuguese for now.
 
-## O que a gaiola cobre
+## Quick start
 
-- Oxlint para correção e `no-explicit-any`; Prettier só para formatar.
-- ast-grep (`rules/`): zero comentários, `useEffect` restrito, `catch` que engole erro, fronteiras entre features.
-- knip: export, arquivo ou dependência órfã.
-- Vitest: um teste por feature.
+With a coding agent: tell it _"go to https://github.com/seatrunk/mimeograph and follow INSTALL.md"_. The guide for agents is [INSTALL.md](./INSTALL.md); it asks before overwriting files, changing CI or pushing.
 
-Ao adicionar Next.js ou Vite, mantenha `pnpm check` e as regras como estão.
+By hand (Node >= 24 and pnpm; the pnpm version is pinned in `packageManager`):
 
-Detalhes para agentes em [AGENTS.md](./AGENTS.md); mapa de telas em [docs/features](./docs/features/README.md).
+```sh
+git clone https://github.com/seatrunk/mimeograph.git
+cd mimeograph
+pnpm install --frozen-lockfile
+pnpm check
+```
+
+Delete `src/features/example-a`, `src/features/example-b` and `docs/features/example-flow.md` when you have your first real feature. Run `pnpm check` before every commit; CI runs the same command.
+
+## CI runner
+
+`.github/workflows/ci.yml` uses:
+
+```yaml
+runs-on: ${{ fromJSON(vars.CI_RUNS_ON || '"ubuntu-latest"') }}
+```
+
+Without the `CI_RUNS_ON` repository variable, CI runs on `ubuntu-latest`. To use a self-hosted runner, set the variable to a JSON list of runner labels:
+
+```sh
+gh variable set CI_RUNS_ON --repo <owner>/<repo> --body '["self-hosted","Linux","X64","my-runner"]'
+```
+
+Or in GitHub: Settings, Secrets and variables, Actions, Variables. The value must be valid JSON and the labels must match an online runner, otherwise jobs fail or wait forever. Do not attach a self-hosted runner to a public repository you do not control.
+
+## Limits
+
+The cage is syntactic and covers what it lists, nothing more. See [docs/limits.md](./docs/limits.md) for what the rules declaredly do not catch.
+
+## License
+
+[MIT](./LICENSE), copyright 2026 seatrunk.
